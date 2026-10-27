@@ -1,0 +1,45 @@
+# dependências e builds
+node_modules
+dist
+.vite
+.tanstack
+*.tsbuildinfo
+.eslintcache
+coverage
+
+# ambiente (apenas .env.example e .env.development sobem)
+.env
+.env.*
+*.local
+!.env.example
+!.env.development
+
+# testes e auditorias geradas
+test-results
+playwright-report
+blob-report
+playwright/.cache
+lighthouse/reports/*
+!lighthouse/reports/summary.md
+
+# fontes brutas das imagens (otimizadas vão para public/images)
+scripts/raw-images/*
+!scripts/raw-images/.gitkeep
+
+# planejamento local (não faz parte da entrega)
+docs/plan/
+docs/planning/
+
+# ferramentas locais
+.claude/settings.local.json
+.serena
+.vscode
+.idea
+.vercel
+*.log
+.DS_Store
+Thumbs.db
+*.swp
+
+# perfil temporário do Chrome criado pelo chrome-launcher no WSL
+/C:*

@@ -1,0 +1,15 @@
+packages:
+  - '.'
+
+# Supply chain: pacote só entra 24 h após publicado; builds de dependência só com permissão explícita;
+# sem dependências git/http em subdependências.
+minimumReleaseAge: 1440
+strictDepBuilds: true
+blockExoticSubdeps: true
+
+allowBuilds:
+  msw: false
+  esbuild: true
+  sharp: true
+  '@tailwindcss/oxide': true
+  unrs-resolver: true

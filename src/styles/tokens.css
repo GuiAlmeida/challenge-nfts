@@ -1,0 +1,81 @@
+/* Tokens extraídos do Figma (PLANEJAMENTO.md A.3). Paleta crua em --kurio-*, semântica shadcn em :root. */
+:root {
+  --kurio-ink: #140d0a;
+  --kurio-foreground: #f5f1eb;
+  --kurio-primary: #d28a4c;
+  --kurio-accent: #e89b55;
+  --kurio-sand: #cfb28c;
+  --kurio-secondary: #b39463;
+  --kurio-border: #3f2319;
+  --kurio-border-soft: #55321f;
+  --kurio-surface-card: #241612;
+  --kurio-surface-raised: #2f1d15;
+  --kurio-surface-dark: #38220f;
+  --kurio-coral: #f0805f;
+  --kurio-success: #00a66c;
+  --kurio-gray-light: #ededed;
+
+  --background: var(--kurio-ink);
+  --foreground: var(--kurio-foreground);
+  --card: var(--kurio-surface-card);
+  --card-foreground: var(--kurio-foreground);
+  --popover: var(--kurio-surface-card);
+  --popover-foreground: var(--kurio-foreground);
+  --primary: var(--kurio-primary);
+  --primary-foreground: var(--kurio-ink);
+  --secondary: var(--kurio-surface-raised);
+  --secondary-foreground: var(--kurio-foreground);
+  --muted: var(--kurio-surface-raised);
+  --muted-foreground: var(--kurio-secondary);
+  --accent: var(--kurio-surface-raised);
+  --accent-foreground: var(--kurio-accent);
+  --destructive: var(--kurio-coral);
+  --destructive-foreground: var(--kurio-ink);
+  --border: var(--kurio-border);
+  --input: var(--kurio-border);
+  --ring: var(--kurio-primary);
+  --radius: 6px;
+}
+
+@theme inline {
+  --font-mono: 'Roboto Mono Variable', 'Roboto Mono Fallback', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-sans: var(--font-mono);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-ink: var(--kurio-ink);
+  --color-brand: var(--kurio-accent);
+  --color-sand: var(--kurio-sand);
+  --color-border-soft: var(--kurio-border-soft);
+  --color-surface-raised: var(--kurio-surface-raised);
+  --color-surface-dark: var(--kurio-surface-dark);
+  --color-coral: var(--kurio-coral);
+  --color-success: var(--kurio-success);
+  --color-gray-light: var(--kurio-gray-light);
+
+  --radius-xs: 3px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 16px;
+  --radius-2xl: 24px;
+  --radius-pill: 40px;
+}
