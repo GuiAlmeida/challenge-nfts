@@ -11,3 +11,7 @@ export function headerHasDivider(pathname: string): boolean {
 export function hidesTabBar(pathname: string): boolean {
   return /^\/(login|register|checkout|orders\/|nft\/)/.test(pathname)
 }
+
+export function hidesFooterOnMobile(pathname: string): boolean {
+  return /^\/(login|register)(\/|$)/.test(pathname)
+}

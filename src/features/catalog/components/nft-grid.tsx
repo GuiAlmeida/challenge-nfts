@@ -7,17 +7,7 @@ import { ImageZoomDialog } from './image-zoom-dialog'
 import { NftCard } from './nft-card'
 import { Pagination } from './pagination'
 
-export function NftGrid({
-  query,
-  page,
-  onClearFilters,
-  onFavorite,
-}: {
-  query: UseQueryResult<NftListResponse>
-  page: number
-  onClearFilters: () => void
-  onFavorite: (nft: NftSummary) => void
-}) {
+export function NftGrid({ query, page, onClearFilters }: { query: UseQueryResult<NftListResponse>; page: number; onClearFilters: () => void }) {
   const [zoom, setZoom] = useState<NftSummary | null>(null)
   const topRef = useRef<HTMLDivElement>(null)
   const lastPage = useRef(page)
@@ -58,7 +48,7 @@ export function NftGrid({
           >
             {items.map((nft, index) => (
               <li key={nft.id}>
-                <NftCard nft={nft} index={index} onFavorite={onFavorite} onZoom={setZoom} />
+                <NftCard nft={nft} index={index} onZoom={setZoom} />
               </li>
             ))}
           </ul>

@@ -1,11 +1,10 @@
 import { useState } from 'react'
-import { HeartIcon } from '@/assets/icons'
-import { Breadcrumb, ErrorState, Icon, NftDetailSkeleton, PageContainer, Price, Stepper } from '@/components/layout'
+import { Breadcrumb, ErrorState, NftDetailSkeleton, PageContainer, Price, Stepper } from '@/components/layout'
+import { FavoriteButton } from '@/features/favorites'
 import { Button } from '@/components/ui/button'
 import type { NftDetail, NftSummary } from '@/contracts/nft'
 import { ImageZoomDialog } from '../components/image-zoom-dialog'
 import { useNft } from '../queries/use-nft'
-import { useFavoriteAction } from '../use-favorite-action'
 import { BuyBar } from './buy-bar'
 import { DetailTabs } from './detail-tabs'
 import { EditionChips } from './edition-chips'
@@ -54,15 +53,13 @@ function MetaList({ nft, className }: { nft: NftDetail; className?: string }) {
 
 function Loaded({ nft }: { nft: NftDetail }) {
   const flow = useNftDetailFlow(nft)
-  const favorite = useFavoriteAction()
   const [zoom, setZoom] = useState<NftSummary | null>(null)
   const url = typeof window === 'undefined' ? '' : window.location.href
-  const favoriteThis = () => favorite(nft.name)
 
   return (
     <>
       <div className="pb-50 md:hidden">
-        <NftGallery nft={nft} onFavorite={favoriteThis} />
+        <NftGallery nft={nft} />
         <section className="relative -mt-7.5 flex flex-col gap-3 rounded-t-[31px] bg-card px-6 pt-8 pb-6">
           <div className="flex items-center justify-between gap-3">
             <h1 className="text-xl leading-4 font-bold text-foreground">{nft.name}</h1>
@@ -79,7 +76,7 @@ function Loaded({ nft }: { nft: NftDetail }) {
         </section>
         <PageContainer className="flex flex-col gap-10 pt-6">
           <DetailTabs nft={nft} />
-          <RelatedNfts nft={nft} onFavorite={(item) => favorite(item.name)} onZoom={setZoom} />
+          <RelatedNfts nft={nft} onZoom={setZoom} />
         </PageContainer>
         <BuyBar flow={flow} name={nft.name} />
       </div>
@@ -88,7 +85,7 @@ function Loaded({ nft }: { nft: NftDetail }) {
         <div className="flex flex-col gap-7">
           <Breadcrumb items={[{ label: 'Início', to: '/' }, { label: 'Mercado', to: '/' }, { label: nft.name }]} />
           <div className="flex items-start gap-8">
-            <NftGallery nft={nft} onFavorite={favoriteThis} />
+            <NftGallery nft={nft} />
             <div className="flex min-w-0 flex-1 flex-col gap-5">
               <div className="flex flex-col gap-3 border-b border-border pb-3">
                 <h1 className="text-[28px] font-bold text-foreground">{nft.name}</h1>
@@ -120,10 +117,7 @@ function Loaded({ nft }: { nft: NftDetail }) {
                   <Button type="button" size="sm" radius="md" className="w-32.5 text-sm" onClick={flow.buy} disabled={flow.soldOut || flow.buying}>
                     {flow.buying ? 'ADICIONANDO…' : flow.soldOut ? 'ESGOTADO' : 'COMPRAR'}
                   </Button>
-                  <Button type="button" variant="outline" size="sm" radius="md" className="w-32.5 gap-2 text-sm" onClick={favoriteThis}>
-                    <Icon icon={HeartIcon} size={20} />
-                    Favoritar
-                  </Button>
+                  <FavoriteButton nftId={nft.id} name={nft.name} variant="outline" />
                 </div>
               </div>
               <div className="flex flex-col gap-3">
@@ -134,7 +128,7 @@ function Loaded({ nft }: { nft: NftDetail }) {
           </div>
         </div>
         <DetailTabs nft={nft} />
-        <RelatedNfts nft={nft} onFavorite={(item) => favorite(item.name)} onZoom={setZoom} />
+        <RelatedNfts nft={nft} onZoom={setZoom} />
       </PageContainer>
 
       <ImageZoomDialog image={zoom?.image ?? null} title={zoom?.name ?? ''} open={zoom !== null} onOpenChange={(open) => !open && setZoom(null)} />

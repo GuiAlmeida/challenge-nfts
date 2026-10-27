@@ -1,12 +1,13 @@
 import { useCanGoBack, useRouter } from '@tanstack/react-router'
 import { cn } from 'cn'
 import { useState } from 'react'
-import { ArrowLeftIcon, HeartIcon, ZoomIcon } from '@/assets/icons'
+import { ArrowLeftIcon, ZoomIcon } from '@/assets/icons'
 import { Icon, NftImage } from '@/components/layout'
 import type { NftDetail } from '@/contracts/nft'
+import { FavoriteButton } from '@/features/favorites'
 import { ImageZoomDialog } from '../components/image-zoom-dialog'
 
-export function NftGallery({ nft, onFavorite }: { nft: NftDetail; onFavorite: () => void }) {
+export function NftGallery({ nft }: { nft: NftDetail }) {
   const [index, setIndex] = useState(0)
   const [zoom, setZoom] = useState(false)
   const router = useRouter()
@@ -58,14 +59,7 @@ export function NftGallery({ nft, onFavorite }: { nft: NftDetail; onFavorite: ()
           >
             <Icon icon={ArrowLeftIcon} size={20} />
           </button>
-          <button
-            type="button"
-            onClick={onFavorite}
-            aria-label={`Favoritar ${nft.name}`}
-            className="flex size-8.75 items-center justify-center rounded-full border border-border bg-surface-raised text-brand outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            <Icon icon={HeartIcon} size={16} />
-          </button>
+          <FavoriteButton nftId={nft.id} name={nft.name} size={35} />
         </div>
         <button
           type="button"

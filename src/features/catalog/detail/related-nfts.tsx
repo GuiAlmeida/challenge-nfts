@@ -4,15 +4,7 @@ import type { NftDetail, NftSummary } from '@/contracts/nft'
 import { NftCard } from '../components/nft-card'
 import { nftListOptions } from '../queries/options'
 
-export function RelatedNfts({
-  nft,
-  onFavorite,
-  onZoom,
-}: {
-  nft: NftDetail
-  onFavorite: (nft: NftSummary) => void
-  onZoom: (nft: NftSummary) => void
-}) {
+export function RelatedNfts({ nft, onZoom }: { nft: NftDetail; onZoom: (nft: NftSummary) => void }) {
   const query = useQuery(
     nftListOptions({
       q: undefined,
@@ -37,7 +29,7 @@ export function RelatedNfts({
         <ul className="grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3 lg:grid-cols-5 lg:gap-x-6.5">
           {items.map((item) => (
             <li key={item.id}>
-              <NftCard nft={item} onFavorite={onFavorite} onZoom={onZoom} />
+              <NftCard nft={item} onZoom={onZoom} />
             </li>
           ))}
         </ul>

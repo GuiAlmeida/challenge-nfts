@@ -1,18 +1,27 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { toast } from 'sonner'
 import '@/styles/globals.css'
 import { configureHttp } from '@/lib/http'
-import { useSessionStore } from '@/features/auth'
-import { ensureCartId } from '@/features/cart'
+import { isPrivatePath, signOut, useSessionStore } from '@/features/auth'
+import { ensureCartId, installCartSessionBridge } from '@/features/cart'
 import { App } from './providers'
 import { bootstrapMocks } from './bootstrap-mocks'
+import { queryClient } from './query-client'
+import { router } from './router'
 
 configureHttp({
   getToken: () => useSessionStore.getState().token,
   getCartId: ensureCartId,
-  onUnauthorized: () => useSessionStore.getState().expire(),
+  onUnauthorized: () => {
+    signOut(queryClient, 'expired')
+    toast.warning('Sua sessão expirou. Entre novamente para continuar.', { id: 'session-expired' })
+    const { pathname, href } = router.state.location
+    if (isPrivatePath(pathname)) void router.navigate({ to: '/login', search: { redirect: href } })
+  },
 })
 
+installCartSessionBridge()
 void bootstrapMocks()
 
 const container = document.getElementById('root')

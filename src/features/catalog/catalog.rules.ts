@@ -2,7 +2,7 @@ import type { Edition } from '@/contracts/nft'
 import { CATALOG_SEARCH_DEFAULTS, type CatalogSearch, joinCsv, splitCsv } from '@/contracts/search'
 import { compareEth, formatEth, parseEth } from '@/lib/eth'
 
-const withDefaults = (search: Partial<CatalogSearch>): CatalogSearch => ({
+export const withDefaults = (search: Partial<CatalogSearch>): CatalogSearch => ({
   q: search.q,
   collection: search.collection,
   network: search.network,
@@ -100,3 +100,5 @@ export function formatPriceLabel(value: string): string {
 export function isPriceRangeWhole(range: { min: string; max: string }, value: [string, string]): boolean {
   return compareEth(value[0], range.min) <= 0 && compareEth(value[1], range.max) >= 0
 }
+
+export const DEFAULT_CATALOG_SEARCH: CatalogSearch = withDefaults({})

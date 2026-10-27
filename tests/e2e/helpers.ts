@@ -31,3 +31,15 @@ export const priceOf = async (card: ReturnType<typeof cards>) => {
   const match = /(\d+\.\d+) ETH/.exec(text)
   return match ? Number(match[1]) : Number.NaN
 }
+
+export async function fillLogin(page: Page, email: string, password: string): Promise<void> {
+  await page.getByRole('textbox', { name: 'E-mail' }).fill(email)
+  await page.getByLabel('Senha', { exact: true }).fill(password)
+  await page.getByRole('button', { name: 'Entrar', exact: true }).click()
+}
+
+export async function signIn(page: Page, email = 'ana@kurio.test', password = 'Kurio!2026'): Promise<void> {
+  await page.goto('/login')
+  await fillLogin(page, email, password)
+  await page.waitForURL((url) => !url.pathname.startsWith('/login'))
+}

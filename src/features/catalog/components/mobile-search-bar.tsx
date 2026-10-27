@@ -1,10 +1,10 @@
 import { useId, useState } from 'react'
 import { FilterIcon, SearchMobileIcon } from '@/assets/icons'
 import { Icon } from '@/components/layout'
-import { useCatalogNavigate, useCatalogSearch } from '../search-params'
+import type { CatalogSearch } from '@/contracts/search'
+import { useCatalogNavigate } from '../search-params'
 
-export function MobileSearchBar({ onOpenFilters, activeCount }: { onOpenFilters: () => void; activeCount: number }) {
-  const search = useCatalogSearch()
+export function MobileSearchBar({ search, onOpenFilters, activeCount }: { search: CatalogSearch; onOpenFilters: () => void; activeCount: number }) {
   const patch = useCatalogNavigate()
   const [value, setValue] = useState(search.q ?? '')
   const inputId = useId()

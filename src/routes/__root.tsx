@@ -1,7 +1,7 @@
 import { type QueryClient } from '@tanstack/react-query'
 import { createRootRouteWithContext, type ErrorComponentProps, HeadContent, Link, Outlet, useRouter, useRouterState } from '@tanstack/react-router'
-import { AppFooter, AppHeader, FetchingBar, hidesTabBar, MobileTabBar, OfflineBanner, PageContainer } from '@/components/layout'
-import { useSessionStore, useSessionUser } from '@/features/auth'
+import { AppFooter, AppHeader, FetchingBar, hidesFooterOnMobile, hidesTabBar, MobileTabBar, OfflineBanner, PageContainer } from '@/components/layout'
+import { useLogout, useSessionUser } from '@/features/auth'
 import { useCartCount } from '@/features/cart'
 import { Button } from '@/components/ui/button'
 import { Toaster } from '@/components/ui/sonner'
@@ -21,6 +21,8 @@ function RootLayout() {
   const showTabBar = !hidesTabBar(pathname)
   const user = useSessionUser()
   const cartCount = useCartCount()
+  const logout = useLogout()
+  const footerMobileHidden = hidesFooterOnMobile(pathname)
   return (
     <div className="flex min-h-svh flex-col">
       <HeadContent />
@@ -32,11 +34,13 @@ function RootLayout() {
       </a>
       <FetchingBar />
       <OfflineBanner />
-      <AppHeader user={user} cartCount={cartCount} onLogout={() => useSessionStore.getState().clear()} />
+      <AppHeader user={user} cartCount={cartCount} onLogout={() => void logout()} />
       <main id="conteudo" className={showTabBar ? 'flex-1 pb-24 md:pb-0' : 'flex-1'}>
         <Outlet />
       </main>
-      <AppFooter />
+      <div className={footerMobileHidden ? 'hidden md:block' : undefined}>
+        <AppFooter />
+      </div>
       {showTabBar ? <MobileTabBar /> : null}
       <Toaster />
     </div>

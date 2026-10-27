@@ -4,7 +4,6 @@ import type { CatalogSearch } from '@/contracts/search'
 import { countActiveFilters } from '../catalog.rules'
 import { useNfts } from '../queries/use-nfts'
 import { useCatalogNavigate } from '../search-params'
-import { useFavoriteAction } from '../use-favorite-action'
 import { BlogCards } from './blog-cards'
 import { FeaturedBanner } from './featured-banner'
 import { Filters } from './filters'
@@ -27,14 +26,13 @@ const CLEAR_ALL: Partial<CatalogSearch> = {
 export function HomePage({ search }: { search: CatalogSearch }) {
   const query = useNfts(search)
   const patch = useCatalogNavigate()
-  const favorite = useFavoriteAction()
   const [filtersOpen, setFiltersOpen] = useState(false)
   const activeCount = countActiveFilters(search)
   const facets = query.data?.facets
 
   return (
     <PageContainer className="flex flex-col gap-10 pt-6 pb-16 md:gap-16 md:pt-8">
-      <MobileSearchBar onOpenFilters={() => setFiltersOpen(true)} activeCount={activeCount} />
+      <MobileSearchBar search={search} onOpenFilters={() => setFiltersOpen(true)} activeCount={activeCount} />
       <Hero />
       <section id="catalogo" aria-label="Catálogo de NFTs" className="flex scroll-mt-6 items-start gap-12">
         <aside className="hidden w-77.5 shrink-0 flex-col gap-6 lg:flex">
@@ -48,7 +46,7 @@ export function HomePage({ search }: { search: CatalogSearch }) {
             onOpenFilters={() => setFiltersOpen(true)}
             activeFilterCount={activeCount}
           />
-          <NftGrid query={query} page={search.page} onClearFilters={() => void patch(CLEAR_ALL)} onFavorite={(nft) => favorite(nft.name)} />
+          <NftGrid query={query} page={search.page} onClearFilters={() => void patch(CLEAR_ALL)} />
         </div>
       </section>
       <PromoCards />

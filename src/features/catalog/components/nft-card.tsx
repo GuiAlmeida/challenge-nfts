@@ -1,17 +1,17 @@
 import { Link } from '@tanstack/react-router'
 import { cn } from 'cn'
-import { CartIcon, FavCircleIcon, ZoomIcon } from '@/assets/icons'
+import { CartIcon, ZoomIcon } from '@/assets/icons'
 import { Icon, NftImage, Price } from '@/components/layout'
 import type { NftSummary } from '@/contracts/nft'
+import { FavoriteButton } from '@/features/favorites'
 
 export interface NftCardProps {
   nft: NftSummary
-  onFavorite: (nft: NftSummary) => void
   onZoom: (nft: NftSummary) => void
   index?: number
 }
 
-export function NftCard({ nft, onFavorite, onZoom, index = 9 }: NftCardProps) {
+export function NftCard({ nft, onZoom, index = 9 }: NftCardProps) {
   const actionClass =
     'flex size-7 items-center justify-center rounded-full border border-border bg-surface-raised text-foreground outline-none transition-colors hover:text-brand focus-visible:ring-2 focus-visible:ring-ring'
   return (
@@ -39,14 +39,7 @@ export function NftCard({ nft, onFavorite, onZoom, index = 9 }: NftCardProps) {
           </span>
         ) : null}
         <div className="absolute top-3 right-3 flex flex-col items-center gap-2 motion-reduce:transition-none md:opacity-0 md:transition-opacity md:group-focus-within:opacity-100 md:group-hover:opacity-100">
-          <button
-            type="button"
-            onClick={() => onFavorite(nft)}
-            aria-label={`Favoritar ${nft.name}`}
-            className="rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            <Icon icon={FavCircleIcon} size={28} />
-          </button>
+          <FavoriteButton nftId={nft.id} name={nft.name} size={28} />
           <Link
             to="/nft/$nftId"
             params={{ nftId: nft.id }}
