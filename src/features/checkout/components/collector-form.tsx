@@ -10,15 +10,14 @@ import { NETWORK_LABEL, networkSchema, WALLET_PROVIDER_LABEL, walletProviderSche
 import type { CheckoutFlow } from '../use-checkout-flow'
 import { WalletCards } from './wallet-cards'
 
-
-export function CollectorForm({ flow, className }: { flow: CheckoutFlow; className?: string }) {
+export function CollectorForm({ flow, compact = false, className }: { flow: CheckoutFlow; compact?: boolean; className?: string }) {
   const { form } = flow
   const network = useWatch({ control: form.control, name: 'network' })
   const walletId = useWatch({ control: form.control, name: 'walletId' })
   return (
     <Form {...form}>
       <form id="checkout-form" onSubmit={flow.confirm} noValidate className={cn('flex flex-col gap-7', className)}>
-        <h2 className="text-base leading-4 font-bold text-foreground">Perfil do colecionador</h2>
+        {compact ? null : <h2 className="text-base leading-4 font-bold text-foreground">Perfil do colecionador</h2>}
         <div className="grid grid-cols-1 gap-x-6 gap-y-3 md:grid-cols-2">
           <FormField
             control={form.control}
@@ -103,7 +102,13 @@ export function CollectorForm({ flow, className }: { flow: CheckoutFlow; classNa
               <FormItem className="md:pt-7">
                 <FormLabel className="sr-only">ENS ou carteira secundária (opcional)</FormLabel>
                 <FormControl>
-                  <Input placeholder="ENS ou carteira secundária (opcional)" spellCheck={false} className={fieldInputClass} {...f} value={f.value ?? ''} />
+                  <Input
+                    placeholder="ENS ou carteira secundária (opcional)"
+                    spellCheck={false}
+                    className={fieldInputClass}
+                    {...f}
+                    value={f.value ?? ''}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -176,24 +181,26 @@ export function CollectorForm({ flow, className }: { flow: CheckoutFlow; classNa
           ) : null}
         </div>
 
-        <div className="flex flex-col gap-4">
-          <label className="flex w-fit cursor-pointer items-center gap-2 text-[15px] leading-5 text-foreground">
-            <Checkbox
-              checked={flow.useOtherWallet}
-              onCheckedChange={(checked) => flow.setUseOtherWallet(checked === true)}
-              className="size-[15px] rounded-full border-primary"
-            />
-            Usar outra carteira?
-          </label>
-          {flow.useOtherWallet || flow.wallets.length === 0 ? (
-            <WalletCards wallets={flow.wallets} selectedId={walletId} onSelect={flow.selectWallet} />
-          ) : null}
-          {form.formState.errors.walletId ? (
-            <p role="alert" className="text-sm text-coral">
-              {form.formState.errors.walletId.message}
-            </p>
-          ) : null}
-        </div>
+        {compact ? null : (
+          <div className="flex flex-col gap-4">
+            <label className="flex w-fit cursor-pointer items-center gap-2 text-[15px] leading-5 text-foreground">
+              <Checkbox
+                checked={flow.useOtherWallet}
+                onCheckedChange={(checked) => flow.setUseOtherWallet(checked === true)}
+                className="size-[15px] rounded-full border-primary"
+              />
+              Usar outra carteira?
+            </label>
+            {flow.useOtherWallet || flow.wallets.length === 0 ? (
+              <WalletCards wallets={flow.wallets} selectedId={walletId} onSelect={flow.selectWallet} />
+            ) : null}
+            {form.formState.errors.walletId ? (
+              <p role="alert" className="text-sm text-coral">
+                {form.formState.errors.walletId.message}
+              </p>
+            ) : null}
+          </div>
+        )}
 
         <FormField
           control={form.control}

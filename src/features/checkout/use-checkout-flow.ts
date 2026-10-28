@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { useEffect, useRef, useState } from 'react'
+import { flushSync } from 'react-dom'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import type { PublicUser } from '@/contracts/auth'
@@ -55,6 +56,8 @@ export function useCheckoutFlow({ user, wallets }: { user: PublicUser; wallets: 
   const [revalidating, setRevalidating] = useState(false)
   const [useOtherWallet, setUseOtherWallet] = useState(wallets.length === 0 || Boolean(draft && draft.walletId && draft.walletId !== primary?.id))
   const submitting = useRef(false)
+  const [customerOpen, setCustomerOpen] = useState(false)
+  const revealCustomer = () => flushSync(() => setCustomerOpen(true))
 
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
   useEffect(() => {
@@ -108,6 +111,7 @@ export function useCheckoutFlow({ user, wallets }: { user: PublicUser; wallets: 
       }
       if (isApiError(error) && error.status === 422 && error.fields) {
         forgetAttempt(userId, target.fingerprint)
+        revealCustomer()
         applyApiErrorToForm(form, error, customerField)
         setSubmitError({ message: error.message })
         return
@@ -148,7 +152,7 @@ export function useCheckoutFlow({ user, wallets }: { user: PublicUser; wallets: 
       return
     }
     await submitOrder(fresh, values)
-  })
+  }, revealCustomer)
 
   const confirm = async (event?: React.BaseSyntheticEvent) => {
     event?.preventDefault()
@@ -178,6 +182,8 @@ export function useCheckoutFlow({ user, wallets }: { user: PublicUser; wallets: 
 
   return {
     form,
+    customerOpen,
+    setCustomerOpen,
     wallets,
     primary,
     useOtherWallet,

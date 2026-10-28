@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { fillLogin, openWithMocks, signIn } from './helpers'
+import { fillLogin, openCollectorData, openWithMocks, signIn } from './helpers'
 import { mock } from './mock'
 
 test.describe('autenticação e sessão (README 3)', () => {
@@ -96,6 +96,7 @@ test.describe('autenticação e sessão (README 3)', () => {
     await mock.setScenario(page, 'session-expired', { reset: false })
     await signIn(page)
     await page.goto('/checkout')
+    await openCollectorData(page)
     const note = page.getByRole('textbox', { name: 'Observação do colecionador (opcional)' })
     await note.fill('Rascunho antes de expirar')
     await page.waitForTimeout(700)
@@ -108,6 +109,7 @@ test.describe('autenticação e sessão (README 3)', () => {
     await expect(page.getByText('Sua sessão expirou. Entre novamente para continuar.').filter({ visible: true })).toBeVisible()
     await fillLogin(page, 'ana@kurio.test', 'Kurio!2026')
     await expect(page).toHaveURL('/checkout')
+    await openCollectorData(page)
     await expect(page.getByRole('textbox', { name: 'Observação do colecionador (opcional)' })).toHaveValue('Rascunho antes de expirar')
   })
 })

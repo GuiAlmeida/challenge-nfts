@@ -17,7 +17,19 @@ function Row({ label, value }: { label: string; value: string }) {
   )
 }
 
-export function OrderSummary({ flow, className }: { flow: CheckoutFlow; className?: string }) {
+export function AvailabilityAlert({ flow }: { flow: CheckoutFlow }) {
+  if (!flow.availabilityError) return null
+  return (
+    <div role="alert" className="flex flex-col items-start gap-2 rounded-md border border-coral/50 px-3 py-3 text-sm text-foreground">
+      {flow.availabilityError}
+      <Button asChild variant="outline" size="xs" radius="md" className="text-sm">
+        <Link to="/cart">Revisar carrinho</Link>
+      </Button>
+    </div>
+  )
+}
+
+export function OrderDetails({ flow, withAvailability = true }: { flow: CheckoutFlow; withAvailability?: boolean }) {
   const { quote } = flow
   const [couponOpen, setCouponOpen] = useState(Boolean(flow.appliedCoupon))
   const couponId = useId()
@@ -25,8 +37,7 @@ export function OrderSummary({ flow, className }: { flow: CheckoutFlow; classNam
   const data = quote.data
 
   return (
-    <aside aria-labelledby="checkout-summary-title" className={cn('flex flex-col gap-7', className)}>
-      <PriceChangeBanner changes={flow.priceChanges} onRefresh={flow.refreshSummary} />
+    <div className="flex flex-col gap-7">
       <div className="flex flex-col gap-3">
         <h2 id="checkout-summary-title" className="text-base leading-4 font-bold text-foreground">
           Seus NFTs
@@ -58,14 +69,7 @@ export function OrderSummary({ flow, className }: { flow: CheckoutFlow; classNam
         ) : null}
       </div>
 
-      {flow.availabilityError ? (
-        <div role="alert" className="flex flex-col items-start gap-2 rounded-md border border-coral/50 px-3 py-3 text-sm text-foreground">
-          {flow.availabilityError}
-          <Button asChild variant="outline" size="xs" radius="md" className="text-sm">
-            <Link to="/cart">Revisar carrinho</Link>
-          </Button>
-        </div>
-      ) : null}
+      {withAvailability ? <AvailabilityAlert flow={flow} /> : null}
 
       <div className="flex flex-col gap-3">
         {flow.appliedCoupon ? (
@@ -128,9 +132,13 @@ export function OrderSummary({ flow, className }: { flow: CheckoutFlow; classNam
           </div>
         ) : null}
       </div>
+    </div>
+  )
+}
 
-      <WalletNetworkPicker flow={flow} />
-
+export function ConfirmPurchase({ flow }: { flow: CheckoutFlow }) {
+  return (
+    <>
       {flow.submitError ? (
         <div role="alert" className="flex flex-col gap-2 rounded-md border border-coral/50 px-3 py-3 text-sm text-foreground">
           {flow.submitError.message}
@@ -159,6 +167,17 @@ export function OrderSummary({ flow, className }: { flow: CheckoutFlow; classNam
       >
         {flow.submitting ? 'Confirmando…' : 'Confirmar compra'}
       </Button>
+    </>
+  )
+}
+
+export function OrderSummary({ flow, className }: { flow: CheckoutFlow; className?: string }) {
+  return (
+    <aside aria-labelledby="checkout-summary-title" className={cn('flex flex-col gap-7', className)}>
+      <PriceChangeBanner changes={flow.priceChanges} onRefresh={flow.refreshSummary} />
+      <OrderDetails flow={flow} />
+      <WalletNetworkPicker flow={flow} />
+      <ConfirmPurchase flow={flow} />
     </aside>
   )
 }

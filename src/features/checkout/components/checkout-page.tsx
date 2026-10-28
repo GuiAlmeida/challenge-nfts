@@ -1,20 +1,24 @@
+import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
-import { Breadcrumb, EmptyState, ErrorState, MobileTopBar, PageContainer, useMediaQuery } from '@/components/layout'
+import { Breadcrumb, Disclosure, EmptyState, ErrorState, MobileTopBar, PageContainer, Price, useMediaQuery } from '@/components/layout'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Button } from '@/components/ui/button'
 import type { PublicUser } from '@/contracts/auth'
 import type { Wallet } from '@/contracts/wallet'
 import { useMe } from '@/features/auth'
-import { useCart } from '@/features/cart'
+import { PriceChangeBanner, useCart } from '@/features/cart'
 import { useWallets } from '@/features/wallets'
 import { useCheckoutFlow } from '../use-checkout-flow'
 import { CollectorForm } from './collector-form'
-import { OrderSummary } from './order-summary'
+import { ConnectedWallets } from './connected-wallets'
+import { AvailabilityAlert, ConfirmPurchase, OrderDetails, OrderSummary } from './order-summary'
 import { QuoteOutdatedDialog } from './quote-outdated-dialog'
+import { WalletNetworkPicker } from './wallet-network-picker'
 
 function CheckoutScreen({ user, wallets }: { user: PublicUser; wallets: Wallet[] }) {
   const flow = useCheckoutFlow({ user, wallets })
   const desktop = useMediaQuery('(min-width: 768px)')
+  const [summaryOpen, setSummaryOpen] = useState(false)
   const dialog = (
     <QuoteOutdatedDialog
       outdated={flow.outdated}
@@ -27,9 +31,26 @@ function CheckoutScreen({ user, wallets }: { user: PublicUser; wallets: Wallet[]
     return (
       <>
         <MobileTopBar title="Pagamento com carteira" />
-        <div className="flex flex-col gap-8 px-7 pb-10">
-          <CollectorForm flow={flow} />
-          <OrderSummary flow={flow} />
+        <div className="flex flex-col gap-7 px-7 pb-10">
+          <ConnectedWallets flow={flow} />
+          <WalletNetworkPicker flow={flow} />
+          <PriceChangeBanner changes={flow.priceChanges} onRefresh={flow.refreshSummary} />
+          <AvailabilityAlert flow={flow} />
+          {flow.quote.data ? (
+            <p className="flex items-center justify-end gap-6 text-base leading-4 font-bold text-foreground">
+              Total:
+              <Price value={flow.quote.data.total} size="lg" />
+            </p>
+          ) : null}
+          <div className="flex flex-col gap-3">
+            <Disclosure title="Resumo do pedido" open={summaryOpen} onOpenChange={setSummaryOpen}>
+              <OrderDetails flow={flow} withAvailability={false} />
+            </Disclosure>
+            <Disclosure title="Dados do colecionador" open={flow.customerOpen} onOpenChange={flow.setCustomerOpen}>
+              <CollectorForm flow={flow} compact />
+            </Disclosure>
+          </div>
+          <ConfirmPurchase flow={flow} />
         </div>
         {dialog}
       </>

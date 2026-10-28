@@ -67,3 +67,11 @@ export async function placeOrder(page: Page): Promise<string> {
   await page.waitForURL(/\/orders\/ord_/)
   return new URL(page.url()).pathname.split('/').pop() ?? ''
 }
+
+export async function openCollectorData(page: Page): Promise<void> {
+  await page.getByRole('button', { name: 'Confirmar compra' }).waitFor()
+  const summary = page.getByText('Dados do colecionador', { exact: true })
+  if (!(await summary.isVisible())) return
+  const open = await page.locator('details', { has: summary }).evaluate((el) => (el as HTMLDetailsElement).open)
+  if (!open) await summary.click()
+}

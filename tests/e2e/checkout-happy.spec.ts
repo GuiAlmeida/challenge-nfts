@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { connectWallet, fillLogin, openWithMocks, placeOrder } from './helpers'
+import { connectWallet, fillLogin, openCollectorData, openWithMocks, placeOrder } from './helpers'
 import { mock } from './mock'
 
 test.describe('checkout e pedido confirmado (README 6)', () => {
@@ -8,6 +8,7 @@ test.describe('checkout e pedido confirmado (README 6)', () => {
     await fillLogin(page, 'ana@kurio.test', 'Kurio!2026')
     await page.waitForURL((url) => !url.pathname.startsWith('/login'))
     await page.goto('/checkout')
+    await openCollectorData(page)
     await expect(page.getByRole('textbox', { name: 'Nome de exibição' })).toHaveValue('Ana Lima')
     await expect(page.getByText('26.846 ETH').filter({ visible: true })).toBeVisible()
 
@@ -57,10 +58,12 @@ test.describe('checkout e pedido confirmado (README 6)', () => {
     await fillLogin(page, 'ana@kurio.test', 'Kurio!2026')
     await page.waitForURL((url) => !url.pathname.startsWith('/login'))
     await page.goto('/checkout')
+    await openCollectorData(page)
     await page.getByRole('textbox', { name: 'Observação do colecionador (opcional)' }).fill('Entregar com carinho')
     await page.waitForTimeout(700)
     await page.goto('/cart')
     await page.goto('/checkout')
+    await openCollectorData(page)
     await expect(page.getByRole('textbox', { name: 'Observação do colecionador (opcional)' })).toHaveValue('Entregar com carinho')
     void placeOrder
   })
