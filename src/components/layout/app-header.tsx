@@ -7,13 +7,14 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { Input } from '@/components/ui/input'
 import type { PublicUser } from '@/contracts/auth'
 import { Icon } from './icon'
-import { activeNavFor, headerHasDivider } from './nav'
+import { activeNavFor } from './nav'
 import { notifyOutOfScope } from './out-of-scope'
 import { PageContainer } from './page-container'
 
 export function AppHeader({ user, cart, onLogout }: { user: PublicUser | null; cart: React.ReactNode; onLogout?: () => void }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname })
-  const active = activeNavFor(pathname)
+  const hash = useRouterState({ select: (s) => s.location.hash })
+  const active = activeNavFor(pathname, hash)
   const navigate = useNavigate()
   const [searchOpen, setSearchOpen] = useState(false)
   const [query, setQuery] = useState('')
@@ -30,17 +31,17 @@ export function AppHeader({ user, cart, onLogout }: { user: PublicUser | null; c
   }
 
   return (
-    <header className={cn('hidden pt-6 md:block', headerHasDivider(pathname) && 'border-b border-border')}>
-      <PageContainer className="flex h-11.25 items-start justify-between pb-0">
+    <header className="sticky top-0 z-40 hidden h-18 border-b border-border bg-background/90 backdrop-blur-md md:block">
+      <PageContainer className="flex h-full items-center justify-between py-0">
         <Link
           to="/"
-          className="flex h-8.5 w-40 items-center font-mono text-sm font-bold tracking-[1.4px] text-foreground"
+          className="flex w-40 items-center font-mono text-sm font-bold tracking-[1.4px] text-foreground"
           aria-label="Kurio, página inicial"
         >
           KURIO
         </Link>
 
-        <nav aria-label="Principal" className="flex gap-5 self-stretch lg:gap-10">
+        <nav aria-label="Principal" className="flex h-full gap-5 lg:gap-10">
           <NavItem to="/" active={active === 'home'}>
             Início
           </NavItem>
@@ -124,13 +125,14 @@ function NavItem({ to, hash, active, children }: { to: '/'; hash?: string; activ
     <Link
       to={to}
       hash={hash}
-      aria-current={active ? 'page' : undefined}
+      activeOptions={{ exact: true, includeHash: true }}
+      inactiveProps={{ 'aria-current': active ? 'page' : undefined }}
       className={cn(
-        'flex flex-col justify-between border-b-2 pb-0 font-mono text-base leading-none outline-none focus-visible:ring-2 focus-visible:ring-ring',
-        active ? 'border-primary font-bold text-brand' : 'border-transparent font-normal text-foreground hover:text-brand',
+        'flex h-full items-center border-y-2 border-transparent font-mono text-base leading-none outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset',
+        active ? 'border-b-primary font-bold text-brand' : 'font-normal text-foreground hover:text-brand',
       )}
     >
-      <span className="pt-1">{children}</span>
+      {children}
     </Link>
   )
 }
@@ -142,7 +144,7 @@ function NavButton({ onClick, children }: { onClick: () => void; children: React
       onClick={onClick}
       aria-disabled="true"
       title="Fora do escopo desta demonstração"
-      className="flex flex-col justify-start border-b-2 border-transparent pt-1 font-mono text-base leading-none text-foreground outline-none hover:text-brand focus-visible:ring-2 focus-visible:ring-ring"
+      className="flex h-full items-center border-y-2 border-transparent font-mono text-base leading-none text-foreground outline-none hover:text-brand focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
     >
       {children}
     </button>

@@ -1,11 +1,8 @@
 export type ActiveNav = 'home' | 'market'
 
-export function activeNavFor(pathname: string): ActiveNav {
+export function activeNavFor(pathname: string, hash = ''): ActiveNav {
+  if (pathname === '/' && hash === 'catalogo') return 'market'
   return /^\/(nft|cart|checkout|orders)(\/|$)/.test(pathname) ? 'market' : 'home'
-}
-
-export function headerHasDivider(pathname: string): boolean {
-  return activeNavFor(pathname) === 'home'
 }
 
 export function hidesTabBar(pathname: string): boolean {

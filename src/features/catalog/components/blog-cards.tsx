@@ -2,7 +2,8 @@ import { NftImage, notifyOutOfScope } from '@/components/layout'
 import type { NftImage as NftImageData } from '@/contracts/nft'
 
 interface Post {
-  meta: string
+  date: string
+  readingMinutes: number
   title: string
   text: string
   image: NftImageData
@@ -10,25 +11,29 @@ interface Post {
 
 const POSTS: Post[] = [
   {
-    meta: '12 de setembro  |  Leitura de 6 min',
+    date: '12 de setembro',
+    readingMinutes: 6,
     title: 'Como funciona a propriedade de NFTs',
     text: 'Aprenda a colecionar, negociar e verificar ativos digitais.',
     image: { slug: 'ape-neon', alt: '' },
   },
   {
-    meta: '13 de setembro  |  Leitura de 2 min',
+    date: '13 de setembro',
+    readingMinutes: 2,
     title: '10 artistas digitais para acompanhar',
     text: 'Conheça criadores que moldam a cultura digital.',
     image: { slug: 'ape-emerald', alt: '' },
   },
   {
-    meta: '15 de setembro  |  Leitura de 3 min',
+    date: '15 de setembro',
+    readingMinutes: 3,
     title: 'Raridade, atributos e procedência',
     text: 'Entenda raridade, procedência, direitos autorais e utilidade.',
     image: { slug: 'ape-sage', alt: '' },
   },
   {
-    meta: '15 de setembro  |  Leitura de 2 min',
+    date: '15 de setembro',
+    readingMinutes: 2,
     title: 'Como proteger sua carteira',
     text: 'Proteja sua carteira, seus ativos e sua identidade.',
     image: { slug: 'ape-golden-beat', alt: '' },
@@ -44,18 +49,21 @@ export function BlogCards() {
         </h2>
         <p className="text-sm text-sand">Histórias, guias e insights para colecionadores sobre o universo da propriedade digital.</p>
       </div>
-      <ul className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <ul className="grid w-full grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
         {POSTS.map((post) => (
           <li key={post.title} className="flex flex-col overflow-hidden rounded-lg bg-card">
             <NftImage
               image={post.image}
               width={268}
               height={195}
-              sizes="(min-width: 1024px) 282px, (min-width: 640px) 45vw, 90vw"
+              sizes="(min-width: 1280px) 282px, (min-width: 640px) 45vw, 90vw"
               className="h-48.75 w-full"
             />
             <div className="flex flex-1 flex-col gap-2 px-4 pt-3 pb-4">
-              <p className="text-xs leading-4 font-medium whitespace-pre text-sand">{post.meta}</p>
+              <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs leading-4 font-medium text-sand">
+                <span>{post.date}</span>
+                <span className="border-l border-border-soft pl-3">Leitura de {post.readingMinutes} min</span>
+              </p>
               <h3 className="text-base font-bold text-foreground">{post.title}</h3>
               <p className="text-xs leading-4 font-medium text-sand">{post.text}</p>
               <button

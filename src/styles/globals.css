@@ -12,6 +12,9 @@
   html {
     color-scheme: dark;
     scroll-behavior: smooth;
+    @variant md {
+      scroll-padding-top: --spacing(18);
+    }
   }
   body {
     @apply bg-background font-mono text-foreground antialiased;

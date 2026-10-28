@@ -103,7 +103,7 @@ function Loaded({ nft }: { nft: NftDetail }) {
               </div>
               <EditionChips editions={nft.editions} selectedId={flow.edition.id} onSelect={flow.selectEdition} />
               <StockNotice max={flow.max} available={flow.edition.available} />
-              <div id="comprar" className="flex scroll-mt-24 flex-wrap items-center justify-between gap-4">
+              <div id="comprar" className="flex scroll-mt-6 flex-wrap items-center justify-between gap-4">
                 <Stepper
                   value={flow.quantity}
                   min={flow.soldOut ? 0 : 1}

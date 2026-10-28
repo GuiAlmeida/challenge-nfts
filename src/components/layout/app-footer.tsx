@@ -90,13 +90,13 @@ export function AppFooter() {
           </div>
         </div>
 
-        <div className="grid grid-cols-[1fr_1.4fr_1fr_1fr] items-center gap-10 bg-surface-dark px-10 py-6 font-mono text-sm text-foreground">
-          <span className="text-sm font-bold tracking-[1.4px]">KURIO</span>
-          <span className="leading-5">Feito para colecionadores, criadores e cultura</span>
+        <div className="grid grid-cols-[auto_1fr] items-center gap-x-10 gap-y-3 bg-surface-dark px-10 py-6 font-mono text-sm leading-5 whitespace-nowrap text-foreground lg:flex lg:justify-between">
+          <span className="font-bold tracking-[1.4px]">KURIO</span>
+          <span>Feito para colecionadores, criadores e cultura</span>
           <a href="mailto:contato@email.com" className="hover:text-brand">
             contato@email.com
           </a>
-          <a href="tel:+5511400289 22" className="hover:text-brand">
+          <a href="tel:+551140028922" className="hover:text-brand">
             +55 11 4002 8922
           </a>
         </div>
