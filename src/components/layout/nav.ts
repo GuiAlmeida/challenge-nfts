@@ -6,7 +6,7 @@ export function activeNavFor(pathname: string, hash = ''): ActiveNav {
 }
 
 export function hidesTabBar(pathname: string): boolean {
-  return /^\/(login|register|checkout|orders\/|nft\/|cart)/.test(pathname)
+  return /^\/(login|register|checkout|nft\/|cart)/.test(pathname)
 }
 
 export function hidesFooterOnMobile(pathname: string): boolean {

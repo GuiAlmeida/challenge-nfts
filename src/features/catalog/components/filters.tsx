@@ -9,7 +9,16 @@ import { Slider } from '@/components/ui/slider'
 import { networkSchema } from '@/contracts/common'
 import type { NftListResponse } from '@/contracts/nft'
 import { type CatalogSearch, splitCsv } from '@/contracts/search'
-import { formatPriceLabel, hasActiveFilters, isPriceRangeWhole, priceStepsFrom, sortFacetsByLabel, stepToEth, toggleCsvValue } from '../catalog.rules'
+import {
+  formatPriceLabel,
+  hasActiveFilters,
+  isPriceRangeWhole,
+  priceInputToStep,
+  priceStepsFrom,
+  sortFacetsByLabel,
+  stepToEth,
+  toggleCsvValue,
+} from '../catalog.rules'
 
 type Facets = NftListResponse['facets']
 
@@ -94,14 +103,64 @@ function FacetList({
   )
 }
 
+function PriceField({
+  label,
+  value,
+  draft,
+  onDraft,
+  onCommit,
+}: {
+  label: string
+  value: string
+  draft: string | null
+  onDraft: (text: string) => void
+  onCommit: () => void
+}) {
+  const id = useId()
+  return (
+    <div className="flex min-w-0 flex-1 flex-col gap-1">
+      <label htmlFor={id} className="text-xs leading-4 text-sand">
+        {label}
+      </label>
+      <div className="flex h-9 items-center gap-1 rounded-xs border border-input px-2 focus-within:border-primary">
+        <input
+          id={id}
+          inputMode="decimal"
+          autoComplete="off"
+          value={draft ?? value}
+          onChange={(event) => onDraft(event.target.value)}
+          onBlur={onCommit}
+          onKeyDown={(event) => {
+            if (event.key !== 'Enter') return
+            event.preventDefault()
+            onCommit()
+          }}
+          className="min-w-0 flex-1 bg-transparent text-sm leading-4 text-foreground outline-none"
+        />
+        <span aria-hidden="true" className="text-xs leading-4 text-sand">
+          ETH
+        </span>
+      </div>
+    </div>
+  )
+}
+
 function PriceFilter({ range, search, onPatch }: { range: Facets['priceRange']; search: CatalogSearch; onPatch: FiltersProps['onPatch'] }) {
   const steps = priceStepsFrom(range, search)
   const [value, setValue] = useState<[number, number]>(steps.value)
-  const labelId = useId()
+  const [drafts, setDrafts] = useState<[string | null, string | null]>([null, null])
   const [lo, hi] = [stepToEth(value[0]), stepToEth(value[1])]
   const apply = () => {
     const whole = isPriceRangeWhole(range, [lo, hi])
     onPatch(whole ? { priceMin: undefined, priceMax: undefined } : { priceMin: lo, priceMax: hi })
+  }
+  const commit = (index: 0 | 1) => {
+    const text = drafts[index]
+    setDrafts((current) => (index === 0 ? [null, current[1]] : [current[0], null]))
+    if (text === null) return
+    const step = priceInputToStep(text, steps.bounds, index === 0 ? 'floor' : 'ceil')
+    if (step === null) return
+    setValue((current) => (index === 0 ? [Math.min(step, current[1]), current[1]] : [current[0], Math.max(step, current[0])]))
   }
   return (
     <div className="flex flex-col gap-3">
@@ -113,11 +172,26 @@ function PriceFilter({ range, search, onPatch }: { range: Facets['priceRange']; 
         value={value}
         onValueChange={(next) => setValue([next[0] ?? steps.bounds[0], next[1] ?? steps.bounds[1]])}
         thumbLabels={['Preço mínimo em ETH', 'Preço máximo em ETH']}
-        aria-describedby={labelId}
       />
-      <p id={labelId} aria-live="polite" className="text-[15px] leading-4 text-foreground">
-        Preço: {formatPriceLabel(lo)} - {formatPriceLabel(hi)} ETH
-      </p>
+      <div className="flex items-end gap-2">
+        <PriceField
+          label="Mínimo"
+          value={formatPriceLabel(lo)}
+          draft={drafts[0]}
+          onDraft={(text) => setDrafts((current) => [text, current[1]])}
+          onCommit={() => commit(0)}
+        />
+        <span aria-hidden="true" className="pb-2.5 text-sand">
+          –
+        </span>
+        <PriceField
+          label="Máximo"
+          value={formatPriceLabel(hi)}
+          draft={drafts[1]}
+          onDraft={(text) => setDrafts((current) => [current[0], text])}
+          onCommit={() => commit(1)}
+        />
+      </div>
       <Button type="button" size="xs" radius="md" className="h-9 self-start px-3" onClick={apply}>
         Aplicar
       </Button>
@@ -129,7 +203,7 @@ function PriceFilterSkeleton() {
   return (
     <div className="flex flex-col gap-3" aria-hidden="true">
       <Skeleton className="h-4 w-full" />
-      <Skeleton className="h-4 w-1/2" />
+      <Skeleton className="h-14 w-full" />
       <Skeleton className="h-9 w-20 rounded-md" />
     </div>
   )

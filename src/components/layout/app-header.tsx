@@ -91,7 +91,7 @@ export function AppHeader({ user, cart, onLogout }: { user: PublicUser | null; c
                   className="w-auto gap-1 px-3 font-medium lg:w-25 lg:px-2"
                   aria-label={`Conta de ${user.displayName}`}
                 >
-                  <Icon icon={LoginIcon} size={20} />
+                  <Icon icon={LoginIcon} size={16} />
                   <span className="truncate">{user.username}</span>
                 </Button>
               </DropdownMenuTrigger>
@@ -109,7 +109,7 @@ export function AppHeader({ user, cart, onLogout }: { user: PublicUser | null; c
           ) : (
             <Button asChild variant="primary" size="xs" className="w-auto gap-1 px-3 font-medium lg:w-25 lg:px-2">
               <Link to="/login">
-                <Icon icon={LoginIcon} size={20} />
+                <Icon icon={LoginIcon} size={16} />
                 Entrar
               </Link>
             </Button>

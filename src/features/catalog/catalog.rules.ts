@@ -100,6 +100,15 @@ export function priceStepsFrom(
   return { bounds: [lo, hi], value: [from, to] }
 }
 
+const PRICE_INPUT = /^\d+([.,]\d{0,18})?$/
+
+export function priceInputToStep(text: string, bounds: [number, number], mode: 'floor' | 'ceil'): number | null {
+  const trimmed = text.trim()
+  if (!PRICE_INPUT.test(trimmed)) return null
+  const step = ethToStep(trimmed.replace(',', '.').replace(/\.$/, ''), mode)
+  return Math.min(Math.max(step, bounds[0]), bounds[1])
+}
+
 export function formatPriceLabel(value: string): string {
   return formatEth(parseEth(value), { minDecimals: 2, maxDecimals: 2 }).replace('.', ',')
 }

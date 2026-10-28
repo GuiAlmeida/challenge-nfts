@@ -50,7 +50,7 @@ export function CartListMobile({
                 onClick={() => onRemove(item)}
                 disabled={disabled}
                 aria-label={`Remover ${item.name} do carrinho`}
-                className="rounded-sm text-foreground outline-none hover:text-coral focus-visible:ring-2 focus-visible:ring-ring"
+                className="-m-3 flex size-11 items-center justify-center rounded-full text-foreground outline-none hover:text-coral focus-visible:ring-2 focus-visible:ring-ring"
               >
                 <Icon icon={TrashIcon} size={20} />
               </button>

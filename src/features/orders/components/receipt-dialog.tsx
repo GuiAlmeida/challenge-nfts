@@ -26,14 +26,14 @@ export function ReceiptDialog({ order }: { order: Order }) {
     <Dialog open onOpenChange={(open) => !open && void navigate({ to: '/' })}>
       <DialogContent
         data-testid="receipt"
-        className="max-h-[92svh] w-139.5 max-w-[calc(100%-2rem)] gap-0 overflow-y-auto rounded-md border-0 bg-card p-0 sm:max-w-139.5"
+        className="flex max-h-[92svh] w-139.5 max-w-[calc(100%-2rem)] flex-col gap-0 overflow-x-hidden overflow-y-auto rounded-md border-0 bg-card p-0 sm:max-w-139.5"
       >
         <div className="flex h-39 flex-col items-center justify-center gap-4">
           <Icon icon={ThankYouIcon} size={80} />
           <DialogTitle className="text-center text-base leading-4 font-bold text-sand">Seus NFTs agora estão na sua carteira</DialogTitle>
         </div>
         <div className="h-px w-full bg-primary" />
-        <dl className="flex flex-wrap justify-between gap-y-3 px-5 py-3 sm:flex-nowrap sm:divide-x sm:divide-border sm:px-6 sm:[&>div]:pr-4 sm:[&>div+div]:pl-4">
+        <dl className="flex flex-wrap justify-between gap-x-6 gap-y-3 px-5 py-3 sm:flex-nowrap sm:divide-x sm:divide-border sm:px-6 sm:[&>div]:pr-4 sm:[&>div+div]:pl-4">
           <Meta label="ID da transação" value={shortHash(order.txHash ?? '')} bold />
           <Meta label="Data" value={formatOrderDate(order.confirmedAt ?? order.updatedAt)} />
           <Meta label="Total" value={`${receipt.total} ETH`} />
@@ -45,25 +45,26 @@ export function ReceiptDialog({ order }: { order: Order }) {
           <div className="flex items-center justify-between border-b border-border pb-3 text-base leading-4 font-bold text-foreground">
             <span>NFTs</span>
             <span className="flex gap-12">
-              <span>Edições</span>
+              <span className="hidden sm:inline">Edições</span>
               <span className="font-medium">Subtotal</span>
             </span>
           </div>
           <ul className="flex flex-col gap-3">
             {receipt.items.map((item) => (
-              <li key={`${item.nftId}-${item.editionLabel}`} className="flex h-17.5 items-center justify-between gap-3">
+              <li key={`${item.nftId}-${item.editionLabel}`} className="flex items-center justify-between gap-3 sm:h-17.5">
                 <div className="flex min-w-0 items-center gap-3">
-                  <NftImage image={item.image} width={70} height={70} sizes="70px" className="size-17.5 shrink-0 rounded-lg" />
+                  <NftImage image={item.image} width={70} height={70} sizes="70px" className="size-14 shrink-0 rounded-lg sm:size-17.5" />
                   <div className="flex min-w-0 flex-col gap-1.5">
-                    <span className="truncate text-base leading-4 font-bold text-foreground">{item.name}</span>
-                    <span className="text-sm leading-4 text-muted-foreground">
+                    <span className="truncate text-sm leading-4 font-bold text-foreground sm:text-base">{item.name}</span>
+                    <span className="truncate text-sm leading-4 text-muted-foreground">
                       ID do token: {item.tokenId} · {item.editionLabel}
+                      <span className="sm:hidden"> · (x {item.quantity})</span>
                     </span>
                   </div>
                 </div>
-                <div className="flex shrink-0 items-center gap-6 sm:gap-12">
-                  <span className="text-sm leading-4 text-sand">(x {item.quantity})</span>
-                  <Price value={item.lineTotal} size="md" />
+                <div className="flex shrink-0 items-center gap-12">
+                  <span className="hidden text-sm leading-4 text-sand sm:inline">(x {item.quantity})</span>
+                  <Price value={item.lineTotal} size="md" className="whitespace-nowrap" />
                 </div>
               </li>
             ))}

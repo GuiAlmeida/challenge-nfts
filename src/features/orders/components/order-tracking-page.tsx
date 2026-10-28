@@ -11,17 +11,17 @@ function OrderItems({ order }: { order: Order }) {
   return (
     <ul className="flex flex-col gap-3">
       {order.receipt.items.map((item) => (
-        <li key={`${item.nftId}-${item.editionLabel}`} className="flex h-17.5 items-center justify-between gap-3 rounded-md bg-card pr-4">
+        <li key={`${item.nftId}-${item.editionLabel}`} className="flex h-17.5 items-center justify-between gap-3 overflow-hidden rounded-md bg-card pr-4">
           <div className="flex min-w-0 items-center gap-3">
             <NftImage image={item.image} width={70} height={70} sizes="70px" className="size-17.5 shrink-0 rounded-l-md" />
             <div className="flex min-w-0 flex-col gap-1.5">
               <span className="truncate text-[15px] leading-4 font-bold text-foreground">{item.name}</span>
-              <span className="text-sm leading-4 text-muted-foreground">
+              <span className="truncate text-sm leading-4 text-muted-foreground">
                 ID do token: {item.tokenId} · (x {item.quantity})
               </span>
             </div>
           </div>
-          <Price value={item.lineTotal} size="sm" />
+          <Price value={item.lineTotal} size="sm" className="shrink-0 whitespace-nowrap" />
         </li>
       ))}
     </ul>

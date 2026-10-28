@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import {
+  priceInputToStep,
   sortFacetsByLabel,
   clampQuantity,
   defaultEditionId,
@@ -119,5 +120,21 @@ describe('sortFacetsByLabel', () => {
     ]
     expect(sortFacetsByLabel(facets).map((f) => f.label)).toEqual(['Arte 3D', 'Arte digital', 'Colecionáveis', 'Música', 'Utilidade'])
     expect(facets[0]?.label).toBe('Utilidade')
+  })
+})
+
+describe('priceInputToStep', () => {
+  const bounds: [number, number] = [32, 409]
+  it('aceita ponto ou vírgula e converte para o passo de 0,01 ETH', () => {
+    expect(priceInputToStep('1,5', bounds, 'floor')).toBe(150)
+    expect(priceInputToStep('1.234', bounds, 'ceil')).toBe(124)
+    expect(priceInputToStep('2,', bounds, 'floor')).toBe(200)
+  })
+
+  it('encaixa nos limites da faixa e recusa texto inválido', () => {
+    expect(priceInputToStep('0,1', bounds, 'floor')).toBe(32)
+    expect(priceInputToStep('99', bounds, 'ceil')).toBe(409)
+    expect(priceInputToStep('abc', bounds, 'floor')).toBeNull()
+    expect(priceInputToStep('', bounds, 'floor')).toBeNull()
   })
 })

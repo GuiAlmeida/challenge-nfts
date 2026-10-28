@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { useState } from 'react'
-import { SocialFacebookIcon, SocialInstagramIcon, SocialLinkedinIcon, SocialTwitterIcon, SocialYoutubeIcon } from '@/assets/icons'
+import { BellIcon } from 'lucide-react'
+import { SocialFacebookIcon, SocialInstagramIcon, SocialLinkedinIcon, SocialTwitterIcon, SocialYoutubeIcon, UserIcon, WalletIcon } from '@/assets/icons'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
@@ -10,17 +11,17 @@ import { PageContainer } from './page-container'
 
 const FEATURES = [
   {
-    letter: 'W',
+    icon: WalletIcon,
     title: 'Segurança da carteira',
     text: 'Proteja sua carteira e colecione arte digital verificada com confiança.',
   },
   {
-    letter: 'C',
+    icon: UserIcon,
     title: 'Criadores em destaque',
     text: 'Conheça artistas, estúdios e comunidades que moldam a cultura digital na rede.',
   },
   {
-    letter: 'D',
+    icon: BellIcon,
     title: 'Alertas de lançamentos',
     text: 'Receba calendários de cunhagem, novidades de listas de acesso e análises do mercado.',
   },
@@ -50,12 +51,9 @@ export function AppFooter() {
         <div className="rounded-t-md bg-card px-10 pt-10 pb-8">
           <div className="grid grid-cols-2 gap-10 xl:grid-cols-[1fr_1fr_1fr_1.2fr]">
             {FEATURES.map((feature, index) => (
-              <div key={feature.letter} className={index > 0 ? 'xl:border-l xl:border-border xl:pl-10' : undefined}>
-                <div
-                  className="flex size-12.5 items-center justify-center rounded-full bg-primary font-mono text-lg font-bold text-primary-foreground"
-                  aria-hidden="true"
-                >
-                  {feature.letter}
+              <div key={feature.title} className={index > 0 ? 'xl:border-l xl:border-border xl:pl-10' : undefined}>
+                <div className="flex size-12.5 items-center justify-center rounded-full bg-primary text-primary-foreground" aria-hidden="true">
+                  <Icon icon={feature.icon} size={24} />
                 </div>
                 <h3 className="mt-6 font-mono text-base leading-5 font-bold text-foreground">{feature.title}</h3>
                 <p className="mt-3 font-mono text-sm leading-6 text-sand">{feature.text}</p>
