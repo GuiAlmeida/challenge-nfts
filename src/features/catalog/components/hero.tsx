@@ -59,7 +59,7 @@ const AUTOPLAY_MS = 9000
 
 function Controls({ carousel, className }: { carousel: Carousel; className?: string }) {
   return (
-    <div role="group" aria-label="Escolher destaque" className={cn('flex items-center gap-2', className)}>
+    <div role="group" aria-label="Escolher destaque" className={cn('flex items-center', className)}>
       {SLIDES.map((slide, index) => (
         <button
           key={slide.eyebrow}
@@ -67,11 +67,16 @@ function Controls({ carousel, className }: { carousel: Carousel; className?: str
           onClick={() => carousel.select(index)}
           aria-label={`Destaque ${index + 1} de ${SLIDES.length}: ${slide.eyebrow}`}
           aria-current={index === carousel.active ? 'true' : undefined}
-          className={cn(
-            'h-2 rounded-full transition-all duration-300 outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card motion-reduce:transition-none',
-            index === carousel.active ? 'w-6 bg-primary' : 'w-2 bg-border-soft hover:bg-secondary',
-          )}
-        />
+          className="group/dot flex h-6 min-w-6 items-center justify-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          <span
+            aria-hidden="true"
+            className={cn(
+              'h-2 rounded-full transition-all duration-300 motion-reduce:transition-none',
+              index === carousel.active ? 'w-6 bg-primary' : 'w-2 bg-border-soft group-hover/dot:bg-secondary',
+            )}
+          />
+        </button>
       ))}
     </div>
   )

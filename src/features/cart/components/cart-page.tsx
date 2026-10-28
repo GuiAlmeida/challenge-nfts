@@ -65,6 +65,7 @@ export function CartPage() {
       <PageContainer className="hidden flex-col gap-16 pt-8 pb-16 md:flex">
         <div className="flex flex-col gap-6">
           <Breadcrumb items={[{ label: 'Início', to: '/' }, { label: 'Mercado', to: '/' }, { label: 'Carrinho' }]} />
+          <h1 className="sr-only">Carrinho</h1>
           <PriceChangeBanner changes={flow.priceChanges} onRefresh={flow.refreshSummary} />
           <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:gap-20">
             <div className="min-w-0 flex-1">

@@ -44,7 +44,7 @@ const emptyCart = () =>
   })
 
 const availabilityError = (allowed: number, reason: string) =>
-  fail(409, 'AVAILABILITY_CONFLICT', allowed === 0 ? 'Esta edição está esgotada.' : `Só restam ${allowed} unidades desta edição.`, {
+  fail(409, 'AVAILABILITY_CONFLICT', allowed === 0 ? 'Esta edição está esgotada.' : allowed === 1 ? 'Só resta 1 unidade desta edição.' : `Só restam ${allowed} unidades desta edição.`, {
     details: { allowed, reason },
   })
 

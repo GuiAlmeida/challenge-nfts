@@ -131,6 +131,11 @@ export function useCheckoutFlow({ user, wallets }: { user: PublicUser; wallets: 
     try {
       fresh = await requestQuote(couponCode)
     } catch (error) {
+      if (isApiError(error) && error.code === 'AVAILABILITY_CONFLICT') {
+        await queryClient.refetchQueries({ queryKey: quoteKeys.for(scope, couponCode) })
+        setRevalidating(false)
+        return
+      }
       setRevalidating(false)
       setSubmitError({ message: error instanceof Error ? error.message : 'Não foi possível revalidar a cotação.' })
       return

@@ -32,9 +32,9 @@ function FilterSection({ title, action, children }: { title: string; action?: Re
   return (
     <section aria-labelledby={titleId} className="flex flex-col gap-3">
       <div className="flex h-6 items-center justify-between gap-3">
-        <h2 id={titleId} className="text-lg leading-6 font-bold text-foreground">
+        <h3 id={titleId} className="text-lg leading-6 font-bold text-foreground">
           {title}
-        </h2>
+        </h3>
         {action}
       </div>
       {children(titleId)}
@@ -57,24 +57,26 @@ function FacetList({
 }) {
   const id = useId()
   return (
-    <ul role="group" aria-labelledby={labelledBy} className="flex flex-col" aria-busy={pending}>
-      {items.map((item) => {
-        const checked = selected.includes(item.value)
-        const inputId = `${id}-${item.value}`
-        return (
-          <li key={item.value} className={cn('flex items-center justify-between text-[15px] leading-10', checked ? 'text-brand' : 'text-sand')}>
-            <label htmlFor={inputId} className="flex cursor-pointer items-center gap-2.5">
-              <Checkbox id={inputId} checked={checked} onCheckedChange={() => onToggle(item.value)} className="size-3.5 border-border-soft" />
-              {item.label}
-            </label>
-            <span className="font-bold">
-              <span className="sr-only">{item.count} itens</span>
-              <span aria-hidden="true">({item.count})</span>
-            </span>
-          </li>
-        )
-      })}
-    </ul>
+    <div role="group" aria-labelledby={labelledBy} aria-busy={pending}>
+      <ul className="flex flex-col">
+        {items.map((item) => {
+          const checked = selected.includes(item.value)
+          const inputId = `${id}-${item.value}`
+          return (
+            <li key={item.value} className={cn('flex items-center justify-between text-[15px] leading-10', checked ? 'text-brand' : 'text-sand')}>
+              <label htmlFor={inputId} className="flex cursor-pointer items-center gap-2.5">
+                <Checkbox id={inputId} checked={checked} onCheckedChange={() => onToggle(item.value)} className="size-3.5 border-border-soft" />
+                {item.label}
+              </label>
+              <span className="font-bold">
+                <span className="sr-only">{item.count} itens</span>
+                <span aria-hidden="true">({item.count})</span>
+              </span>
+            </li>
+          )
+        })}
+      </ul>
+    </div>
   )
 }
 

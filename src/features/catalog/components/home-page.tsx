@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useId, useState } from 'react'
 import { PageContainer } from '@/components/layout'
 import type { CatalogSearch } from '@/contracts/search'
 import { countActiveFilters } from '../catalog.rules'
@@ -28,13 +28,17 @@ export function HomePage({ search }: { search: CatalogSearch }) {
   const patch = useCatalogNavigate()
   const [filtersOpen, setFiltersOpen] = useState(false)
   const activeCount = countActiveFilters(search)
+  const catalogTitleId = useId()
   const facets = query.data?.facets
 
   return (
     <PageContainer className="flex flex-col gap-10 pt-6 pb-16 md:gap-16 md:pt-8">
       <MobileSearchBar search={search} onOpenFilters={() => setFiltersOpen(true)} activeCount={activeCount} />
       <Hero />
-      <section id="catalogo" aria-label="Catálogo de NFTs" className="flex scroll-mt-6 items-start gap-12">
+      <section id="catalogo" aria-labelledby={catalogTitleId} className="flex scroll-mt-6 items-start gap-12">
+        <h2 id={catalogTitleId} className="sr-only">
+          Catálogo de NFTs
+        </h2>
         <aside className="hidden w-77.5 shrink-0 flex-col gap-6 lg:flex">
           <Filters facets={facets} search={search} onPatch={(p) => void patch(p)} />
           <FeaturedBanner />

@@ -48,9 +48,9 @@ export function AppFooter() {
     <footer className="mt-16 hidden md:block">
       <PageContainer className="px-6">
         <div className="rounded-t-md bg-card px-10 pt-10 pb-8">
-          <div className="grid grid-cols-[1fr_1fr_1fr_1.2fr] gap-10">
+          <div className="grid grid-cols-2 gap-10 xl:grid-cols-[1fr_1fr_1fr_1.2fr]">
             {FEATURES.map((feature, index) => (
-              <div key={feature.letter} className={index > 0 ? 'border-l border-border pl-10' : ''}>
+              <div key={feature.letter} className={index > 0 ? 'xl:border-l xl:border-border xl:pl-10' : undefined}>
                 <div
                   className="flex size-12.5 items-center justify-center rounded-full bg-primary font-mono text-lg font-bold text-primary-foreground"
                   aria-hidden="true"
@@ -62,7 +62,7 @@ export function AppFooter() {
               </div>
             ))}
             <form
-              className="border-l border-border pl-10"
+              className="xl:border-l xl:border-border xl:pl-10"
               onSubmit={(event) => {
                 event.preventDefault()
                 toast.info('Newsletter não faz parte desta demonstração.', { id: 'newsletter' })
@@ -101,7 +101,7 @@ export function AppFooter() {
           </a>
         </div>
 
-        <div className="grid grid-cols-4 gap-10 bg-card px-10 pt-8 pb-10 font-mono text-sm">
+        <div className="grid grid-cols-2 gap-10 bg-card px-10 pt-8 pb-10 font-mono text-sm xl:grid-cols-4">
           <FooterColumn title="Meu perfil">
             <FooterLink to="/account/profile">Meu perfil</FooterLink>
             <FooterAction label="Minha coleção" />
@@ -139,7 +139,7 @@ export function AppFooter() {
               ))}
             </ul>
             <p className="mt-4 text-base font-bold text-foreground">Carteiras compatíveis</p>
-            <span className="mt-2 inline-flex h-6.5 items-center rounded-md border border-border-soft bg-surface-dark px-2 text-[9px] font-bold tracking-[0.1px] text-brand">
+            <span className="mt-2 inline-flex h-6.5 items-center self-start rounded-md border border-border-soft bg-surface-dark px-2 text-[9px] font-bold tracking-[0.1px] text-brand">
               METAMASK&nbsp;&nbsp;•&nbsp;&nbsp;WALLETCONNECT&nbsp;&nbsp;•&nbsp;&nbsp;COINBASE
             </span>
           </FooterColumn>

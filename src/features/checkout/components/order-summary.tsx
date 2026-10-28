@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router'
 import { cn } from 'cn'
 import { useId, useState } from 'react'
 import { CartSummarySkeleton, NftImage, Price } from '@/components/layout'
@@ -58,9 +59,12 @@ export function OrderSummary({ flow, className }: { flow: CheckoutFlow; classNam
       </div>
 
       {flow.availabilityError ? (
-        <p role="alert" className="rounded-md border border-coral/50 px-3 py-2 text-sm text-foreground">
+        <div role="alert" className="flex flex-col items-start gap-2 rounded-md border border-coral/50 px-3 py-3 text-sm text-foreground">
           {flow.availabilityError}
-        </p>
+          <Button asChild variant="outline" size="xs" radius="md" className="text-sm">
+            <Link to="/cart">Revisar carrinho</Link>
+          </Button>
+        </div>
       ) : null}
 
       <div className="flex flex-col gap-3">

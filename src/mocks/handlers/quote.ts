@@ -12,6 +12,11 @@ import { toCart } from '../serializers'
 import { findOrCreateCart, resolveOwner, type CartOwner } from './cart'
 import { API_PREFIX, applyScenario, fail, json, parseBody } from './shared'
 
+const availabilityMessage = (name: string, available: number) => {
+  if (available === 0) return `"${name}" esgotou.`
+  return available === 1 ? `"${name}" tem só 1 unidade disponível.` : `"${name}" tem só ${available} unidades disponíveis.`
+}
+
 const QUOTE_TTL_MS = 10 * 60_000
 
 export type CouponLookup = { ok: true; coupon: { code: string; discountBps: number; label: string } | null } | { ok: false; response: Response }
@@ -48,7 +53,7 @@ export function buildQuote(
   if (unavailable) {
     return {
       ok: false,
-      response: fail(409, 'AVAILABILITY_CONFLICT', `"${unavailable.name}" tem só ${unavailable.available} unidades disponíveis.`, {
+      response: fail(409, 'AVAILABILITY_CONFLICT', availabilityMessage(unavailable.name, unavailable.available), {
         details: { itemId: unavailable.id, allowed: unavailable.available },
       }),
     }

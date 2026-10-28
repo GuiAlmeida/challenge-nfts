@@ -38,6 +38,7 @@ function CheckoutScreen({ user, wallets }: { user: PublicUser; wallets: Wallet[]
   return (
     <PageContainer className="flex flex-col gap-12 pt-8 pb-16">
       <Breadcrumb items={[{ label: 'Início', to: '/' }, { label: 'Mercado', to: '/' }, { label: 'Pagamento' }]} />
+      <h1 className="sr-only">Pagamento</h1>
       <div className="grid gap-12 lg:grid-cols-[minmax(0,763fr)_minmax(0,405fr)] lg:gap-8">
         <CollectorForm flow={flow} />
         <OrderSummary flow={flow} />

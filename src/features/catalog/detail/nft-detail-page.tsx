@@ -84,7 +84,7 @@ function Loaded({ nft }: { nft: NftDetail }) {
       <PageContainer className="hidden flex-col gap-16 pt-8 pb-16 md:flex">
         <div className="flex flex-col gap-7">
           <Breadcrumb items={[{ label: 'Início', to: '/' }, { label: 'Mercado', to: '/' }, { label: nft.name }]} />
-          <div className="flex items-start gap-8">
+          <div className="flex flex-col gap-8 lg:flex-row lg:items-start">
             <NftGallery nft={nft} />
             <div className="flex min-w-0 flex-1 flex-col gap-5">
               <div className="flex flex-col gap-3 border-b border-border pb-3">
