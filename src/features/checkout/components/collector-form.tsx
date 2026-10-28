@@ -1,5 +1,6 @@
 import { cn } from 'cn'
 import { useWatch } from 'react-hook-form'
+import { fieldInputClass, fieldSelectTriggerClass } from '@/components/layout'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
@@ -9,9 +10,6 @@ import { NETWORK_LABEL, networkSchema, WALLET_PROVIDER_LABEL, walletProviderSche
 import type { CheckoutFlow } from '../use-checkout-flow'
 import { WalletCards } from './wallet-cards'
 
-const field = 'h-10 rounded-xs px-3 text-sm'
-const trigger =
-  'h-10 w-full rounded-xs border-input bg-transparent px-3 text-sm shadow-none dark:bg-transparent dark:hover:bg-transparent data-[placeholder]:text-muted-foreground'
 
 export function CollectorForm({ flow, className }: { flow: CheckoutFlow; className?: string }) {
   const { form } = flow
@@ -29,7 +27,7 @@ export function CollectorForm({ flow, className }: { flow: CheckoutFlow; classNa
               <FormItem>
                 <FormLabel required>Nome de exibição</FormLabel>
                 <FormControl>
-                  <Input autoComplete="name" className={field} {...f} />
+                  <Input autoComplete="name" className={fieldInputClass} {...f} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -42,7 +40,7 @@ export function CollectorForm({ flow, className }: { flow: CheckoutFlow; classNa
               <FormItem>
                 <FormLabel required>Nome de usuário</FormLabel>
                 <FormControl>
-                  <Input autoComplete="username" className={field} {...f} />
+                  <Input autoComplete="username" className={fieldInputClass} {...f} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -56,7 +54,7 @@ export function CollectorForm({ flow, className }: { flow: CheckoutFlow; classNa
                 <FormLabel required>Rede</FormLabel>
                 <Select value={f.value} onValueChange={f.onChange}>
                   <FormControl>
-                    <SelectTrigger className={trigger} aria-label="Rede">
+                    <SelectTrigger className={fieldSelectTriggerClass} aria-label="Rede">
                       <SelectValue placeholder="Selecione uma rede" />
                     </SelectTrigger>
                   </FormControl>
@@ -79,7 +77,7 @@ export function CollectorForm({ flow, className }: { flow: CheckoutFlow; classNa
               <FormItem>
                 <FormLabel required>Nome do perfil</FormLabel>
                 <FormControl>
-                  <Input className={field} {...f} />
+                  <Input className={fieldInputClass} {...f} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -92,7 +90,7 @@ export function CollectorForm({ flow, className }: { flow: CheckoutFlow; classNa
               <FormItem>
                 <FormLabel required>Endereço da carteira</FormLabel>
                 <FormControl>
-                  <Input placeholder="Endereço 0x da carteira" spellCheck={false} className={field} {...f} />
+                  <Input placeholder="Endereço 0x da carteira" spellCheck={false} className={fieldInputClass} {...f} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -105,7 +103,7 @@ export function CollectorForm({ flow, className }: { flow: CheckoutFlow; classNa
               <FormItem className="md:pt-7">
                 <FormLabel className="sr-only">ENS ou carteira secundária (opcional)</FormLabel>
                 <FormControl>
-                  <Input placeholder="ENS ou carteira secundária (opcional)" spellCheck={false} className={field} {...f} value={f.value ?? ''} />
+                  <Input placeholder="ENS ou carteira secundária (opcional)" spellCheck={false} className={fieldInputClass} {...f} value={f.value ?? ''} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -119,7 +117,7 @@ export function CollectorForm({ flow, className }: { flow: CheckoutFlow; classNa
                 <FormLabel required>Tipo de carteira</FormLabel>
                 <Select value={f.value} onValueChange={f.onChange}>
                   <FormControl>
-                    <SelectTrigger className={trigger} aria-label="Tipo de carteira">
+                    <SelectTrigger className={fieldSelectTriggerClass} aria-label="Tipo de carteira">
                       <SelectValue placeholder="Selecione uma carteira" />
                     </SelectTrigger>
                   </FormControl>
@@ -142,7 +140,7 @@ export function CollectorForm({ flow, className }: { flow: CheckoutFlow; classNa
               <FormItem>
                 <FormLabel>Código de indicação (opcional)</FormLabel>
                 <FormControl>
-                  <Input className={field} {...f} value={f.value ?? ''} />
+                  <Input className={fieldInputClass} {...f} value={f.value ?? ''} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -155,7 +153,7 @@ export function CollectorForm({ flow, className }: { flow: CheckoutFlow; classNa
               <FormItem>
                 <FormLabel required>E-mail</FormLabel>
                 <FormControl>
-                  <Input type="email" autoComplete="email" className={field} {...f} />
+                  <Input type="email" autoComplete="email" className={fieldInputClass} {...f} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -169,7 +167,7 @@ export function CollectorForm({ flow, className }: { flow: CheckoutFlow; classNa
                 <FormItem>
                   <FormLabel>Nome ENS (opcional)</FormLabel>
                   <FormControl>
-                    <Input placeholder="nome.eth" spellCheck={false} className={field} {...f} value={f.value ?? ''} />
+                    <Input placeholder="nome.eth" spellCheck={false} className={fieldInputClass} {...f} value={f.value ?? ''} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

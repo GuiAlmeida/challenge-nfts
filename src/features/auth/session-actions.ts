@@ -1,6 +1,6 @@
 import type { QueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import type { Session } from '@/contracts/auth'
+import type { PublicUser, Session } from '@/contracts/auth'
 import { isPrivateKey } from './private-keys'
 import { authKeys } from './queries/keys'
 import { useSessionStore } from './session-store'
@@ -34,4 +34,9 @@ export function signOut(queryClient: QueryClient, reason: 'logout' | 'expired'):
   queryClient.removeQueries({ predicate: (query) => isPrivateKey(query.queryKey) })
   queryClient.removeQueries({ queryKey: ['cart'] })
   queryClient.removeQueries({ queryKey: ['quote'] })
+}
+
+export function applyUserUpdate(queryClient: QueryClient, user: PublicUser): void {
+  useSessionStore.getState().updateUser(user)
+  queryClient.setQueryData<Session>(authKeys.me(user.id), (current) => (current && current.user.version <= user.version ? { ...current, user } : current))
 }

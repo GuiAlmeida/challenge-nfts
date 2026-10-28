@@ -7,6 +7,7 @@ interface SessionState {
   expiresAt: string | null
   user: PublicUser | null
   setSession: (session: Session) => void
+  updateUser: (user: PublicUser) => void
   clear: () => void
   isAuthenticated: () => boolean
 }
@@ -18,6 +19,7 @@ export const useSessionStore = create<SessionState>()(
       expiresAt: null,
       user: null,
       setSession: (session) => set({ token: session.token, expiresAt: session.expiresAt, user: session.user }),
+      updateUser: (user) => set((state) => (state.user?.id === user.id ? { user } : state)),
       clear: () => set({ token: null, expiresAt: null, user: null }),
       isAuthenticated: () => {
         const { token, expiresAt } = get()

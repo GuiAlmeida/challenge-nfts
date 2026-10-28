@@ -113,4 +113,15 @@ function FormMessage({ className, ...props }: React.ComponentProps<'p'>) {
   )
 }
 
-export { useFormField, Form, FormItem, FormLabel, FormControl, FormDescription, FormMessage, FormField }
+function FormRootMessage({ className }: { className?: string }) {
+  const { errors } = useFormState()
+  const message = errors.root?.message
+  if (!message) return null
+  return (
+    <p data-slot="form-root-message" role="alert" className={cn('text-[13px] leading-4 text-coral', className)}>
+      {message}
+    </p>
+  )
+}
+
+export { useFormField, Form, FormItem, FormLabel, FormControl, FormDescription, FormMessage, FormField, FormRootMessage }
