@@ -9,7 +9,7 @@ const reactHooksConfig = reactHooks.configs.flat?.recommended ?? reactHooks.conf
 
 export default tseslint.config(
   {
-    ignores: ['dist', 'node_modules', 'playwright-report', 'test-results', 'src/routeTree.gen.ts', 'public', 'lighthouse/reports', 'coverage'],
+    ignores: ['dist', 'node_modules', 'playwright-report', 'playwright-report-visual', 'test-results', 'src/routeTree.gen.ts', 'public', 'lighthouse/reports', 'coverage'],
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,
