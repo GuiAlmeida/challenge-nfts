@@ -1,4 +1,4 @@
-import { mkdir, writeFile } from 'node:fs/promises'
+import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { createRequire } from 'node:module'
 import { createServer } from 'node:net'
 import path from 'node:path'
@@ -43,6 +43,7 @@ async function main() {
   const browser = await chromium.launch({ channel: 'chromium', args: [`--remote-debugging-port=${port}`] })
   const browserVersion = browser.version()
   const summary = []
+  const conditions = {}
   try {
     for (const page of PAGES) {
       for (const profile of PROFILES) {
@@ -51,6 +52,10 @@ async function main() {
         for (let run = 1; run <= RUNS; run++) {
           const result = await lighthouse(`${BASE}${page.path}`, { port, output: ['html', 'json'], logLevel: 'error' }, profile.config)
           const lhr = result.lhr
+          const { throttling, screenEmulation, throttlingMethod } = lhr.configSettings
+          conditions[profile.name] =
+            `${screenEmulation.width}x${screenEmulation.height} a ${screenEmulation.deviceScaleFactor}x, RTT ${throttling.rttMs} ms, ` +
+            `${(throttling.throughputKbps / 1024).toFixed(1)} Mbps, CPU ${throttling.cpuSlowdownMultiplier}x (${throttlingMethod})`
           const stem = path.join(OUT, `${page.name}-${profile.name}-run${run}`)
           await writeFile(`${stem}.html`, result.report[0])
           await writeFile(`${stem}.json`, result.report[1])
@@ -75,10 +80,11 @@ async function main() {
   }
   const lhVersion = require('lighthouse/package.json').version
   const lines = [
-    '# Lighthouse — resumo (mediana de ' + RUNS + ' execuções)',
+    '# Lighthouse: resumo (mediana de ' + RUNS + ' execuções)',
     '',
-    `Data: ${new Date().toISOString()} · Lighthouse ${lhVersion} · Node ${process.version} · Chromium ${browserVersion} (Playwright)`,
-    `URL base: ${BASE} · build demo (\`pnpm build:demo\`, mocks ativos, cenário default)`,
+    `- Data: ${new Date().toISOString()} · Lighthouse ${lhVersion} · Node ${process.version} · Chromium ${browserVersion} (Playwright)`,
+    `- URL base: ${BASE} · build demo (\`pnpm build:demo\`, mocks ativos, cenário default)`,
+    ...Object.entries(conditions).map(([name, value]) => `- Condições ${name}: ${value}`),
     '',
     '| Página | Perfil | Performance | Accessibility | Best Practices | SEO | LCP (ms) | CLS | TBT (ms) |',
     '|---|---|---|---|---|---|---|---|---|',
@@ -89,7 +95,8 @@ async function main() {
     '',
     'Metas: Performance ≥ 90, Accessibility ≥ 95, Best Practices ≥ 95, SEO ≥ 90.',
   ]
-  await writeFile(path.join(OUT, 'summary.md'), lines.join('\n') + '\n')
+  const analysis = await readFile(path.resolve('lighthouse/analysis.md'), 'utf8').catch(() => '')
+  await writeFile(path.join(OUT, 'summary.md'), [...lines, '', analysis.trim()].join('\n').trim() + '\n')
   await writeFile(path.join(OUT, 'summary.json'), JSON.stringify(summary, null, 2))
   console.log(lines.join('\n'))
 }
