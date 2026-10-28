@@ -60,9 +60,9 @@ export function BlogCards() {
               className="h-48.75 w-full"
             />
             <div className="flex flex-1 flex-col gap-2 px-4 pt-3 pb-4">
-              <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs leading-4 font-medium text-sand">
-                <span>{post.date}</span>
-                <span className="border-l border-border-soft pl-3">Leitura de {post.readingMinutes} min</span>
+              <p className="flex items-center gap-2 text-xs leading-4 font-medium whitespace-nowrap text-sand">
+                <span className="shrink-0">{post.date}</span>
+                <span className="min-w-0 truncate border-l border-border-soft pl-2">Leitura de {post.readingMinutes} min</span>
               </p>
               <h3 className="text-base font-bold text-foreground">{post.title}</h3>
               <p className="text-xs leading-4 font-medium text-sand">{post.text}</p>
