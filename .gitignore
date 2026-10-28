@@ -15,13 +15,11 @@ coverage
 !.env.development
 
 # testes e auditorias geradas
-test-results
-playwright-report
-playwright-report-visual
-blob-report
+test-results/
+playwright-report/
+playwright-report-visual/
+blob-report/
 playwright/.cache
-lighthouse/reports/*
-!lighthouse/reports/summary.md
 
 # fontes brutas das imagens (otimizadas vão para public/images)
 scripts/raw-images/*
@@ -41,6 +39,3 @@ docs/planning/
 .DS_Store
 Thumbs.db
 *.swp
-
-# perfil temporário do Chrome criado pelo chrome-launcher no WSL
-/C:*

@@ -1,13 +1,11 @@
 import { mkdir, writeFile } from 'node:fs/promises'
 import { createRequire } from 'node:module'
+import { createServer } from 'node:net'
 import path from 'node:path'
 import { chromium } from '@playwright/test'
-import * as chromeLauncher from 'chrome-launcher'
 import lighthouse from 'lighthouse'
 import desktopConfig from '../lighthouse/config.desktop.mjs'
 import mobileConfig from '../lighthouse/config.mobile.mjs'
-import { mkdtempSync, rmSync } from 'node:fs'
-import { tmpdir } from 'node:os'
 
 const require = createRequire(import.meta.url)
 const BASE = process.env.LH_BASE_URL ?? 'http://localhost:4173'
@@ -21,7 +19,17 @@ const PROFILES = [
   { name: 'desktop', config: desktopConfig },
 ]
 const CATEGORIES = ['performance', 'accessibility', 'best-practices', 'seo']
-const OUT = path.resolve('lighthouse/reports')
+const OUT = path.resolve(process.env.LH_OUT ?? 'lighthouse/reports')
+
+const freePort = () =>
+  new Promise((resolve, reject) => {
+    const server = createServer()
+    server.on('error', reject)
+    server.listen(0, () => {
+      const { port } = server.address()
+      server.close(() => resolve(port))
+    })
+  })
 
 const median = (values) => {
   const sorted = [...values].sort((a, b) => a - b)
@@ -31,13 +39,9 @@ const median = (values) => {
 
 async function main() {
   await mkdir(OUT, { recursive: true })
-  const chromePath = process.env.CHROME_PATH ?? chromium.executablePath()
-  const userDataDir = mkdtempSync(path.join(tmpdir(), 'kurio-lighthouse-'))
-  const chrome = await chromeLauncher.launch({
-    chromePath,
-    chromeFlags: ['--headless=new', '--no-sandbox'],
-    userDataDir,
-  })
+  const port = await freePort()
+  const browser = await chromium.launch({ channel: 'chromium', args: [`--remote-debugging-port=${port}`] })
+  const browserVersion = browser.version()
   const summary = []
   try {
     for (const page of PAGES) {
@@ -45,7 +49,7 @@ async function main() {
         const scores = Object.fromEntries(CATEGORIES.map((c) => [c, []]))
         const metrics = { lcp: [], cls: [], tbt: [] }
         for (let run = 1; run <= RUNS; run++) {
-          const result = await lighthouse(`${BASE}${page.path}`, { port: chrome.port, output: ['html', 'json'], logLevel: 'error' }, profile.config)
+          const result = await lighthouse(`${BASE}${page.path}`, { port, output: ['html', 'json'], logLevel: 'error' }, profile.config)
           const lhr = result.lhr
           const stem = path.join(OUT, `${page.name}-${profile.name}-run${run}`)
           await writeFile(`${stem}.html`, result.report[0])
@@ -67,14 +71,13 @@ async function main() {
       }
     }
   } finally {
-    await chrome.kill()
-    rmSync(userDataDir, { recursive: true, force: true })
+    await browser.close()
   }
   const lhVersion = require('lighthouse/package.json').version
   const lines = [
     '# Lighthouse — resumo (mediana de ' + RUNS + ' execuções)',
     '',
-    `Data: ${new Date().toISOString()} · Lighthouse ${lhVersion} · Node ${process.version} · Chromium ${chromePath}`,
+    `Data: ${new Date().toISOString()} · Lighthouse ${lhVersion} · Node ${process.version} · Chromium ${browserVersion} (Playwright)`,
     `URL base: ${BASE} · build demo (\`pnpm build:demo\`, mocks ativos, cenário default)`,
     '',
     '| Página | Perfil | Performance | Accessibility | Best Practices | SEO | LCP (ms) | CLS | TBT (ms) |',
