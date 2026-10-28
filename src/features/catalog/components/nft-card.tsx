@@ -31,7 +31,8 @@ export function NftCard({ nft, onZoom, index = 9 }: NftCardProps) {
             width={250}
             height={250}
             sizes="(min-width: 1024px) 340px, (min-width: 768px) 30vw, 45vw"
-            priority={index < 3}
+            loading={index < 3 ? 'eager' : 'lazy'}
+            fetchPriority={index === 0 ? 'high' : 'auto'}
             className="size-full transition-transform duration-300 group-hover:scale-[1.03] motion-reduce:transition-none"
           />
         </Link>

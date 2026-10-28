@@ -4,7 +4,7 @@ import sharp from 'sharp'
 
 const SRC = path.resolve('scripts/raw-images')
 const OUT = path.resolve('public/images/nfts')
-const SIZES = [250, 450, 900]
+const SIZES = [250, 450, 650, 900]
 
 const files = (await readdir(SRC)).filter((f) => /\.(png|jpe?g|webp)$/i.test(f))
 await mkdir(OUT, { recursive: true })

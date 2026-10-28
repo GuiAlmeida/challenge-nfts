@@ -1,7 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { cn } from 'cn'
 import { ArrowRightIcon } from '@/assets/icons'
-import { Icon, NftImage } from '@/components/layout'
+import { Icon, NftImage, useMediaQuery } from '@/components/layout'
 import { Button } from '@/components/ui/button'
 import type { NftImage as NftImageData } from '@/contracts/nft'
 import type { CatalogSearch } from '@/contracts/search'
@@ -84,110 +84,111 @@ function Controls({ carousel, className }: { carousel: Carousel; className?: str
 
 export function Hero() {
   const carousel = useCarousel(SLIDES.length, AUTOPLAY_MS)
+  const desktop = useMediaQuery('(min-width: 768px)')
   const active = carousel.active
   const slide = SLIDES[active] ?? SLIDES[0]!
-  return (
-    <>
-      <section
-        aria-label="Destaques"
-        aria-roledescription="carrossel"
-        {...carousel.holdProps}
-        className="relative hidden h-112.5 overflow-hidden rounded-2xl bg-card md:flex"
-      >
-        <div className="flex w-full items-stretch justify-between gap-8">
-          <div className="flex min-w-0 flex-1 flex-col justify-center pl-10 lg:pl-12">
-            <div aria-live={carousel.playing ? 'off' : 'polite'}>
-              <div key={active} className="flex max-w-150 animate-in flex-col gap-8 duration-500 fade-in-0 slide-in-from-bottom-2">
-                <div className="flex flex-col gap-1">
-                  <div className="flex flex-col gap-2 text-foreground">
-                    <p className="text-sm leading-4 font-medium tracking-[1.4px]">{slide.eyebrow}</p>
-                    <h1 className="text-[32px] leading-13 font-bold lg:text-[43px] lg:leading-17.5">
-                      {slide.title[0]}
-                      <br />
-                      {slide.title[1]}
-                    </h1>
-                  </div>
-                  <p className="max-w-139.25 text-sm leading-6 text-sand">{slide.text}</p>
+  return desktop ? (
+    <section
+      aria-label="Destaques"
+      aria-roledescription="carrossel"
+      {...carousel.holdProps}
+      className="relative flex h-112.5 overflow-hidden rounded-2xl bg-card"
+    >
+      <div className="flex w-full items-stretch justify-between gap-8">
+        <div className="flex min-w-0 flex-1 flex-col justify-center pl-10 lg:pl-12">
+          <div aria-live={carousel.playing ? 'off' : 'polite'}>
+            <div key={active} className="flex max-w-150 animate-in flex-col gap-8 duration-500 fade-in-0 slide-in-from-bottom-2">
+              <div className="flex flex-col gap-1">
+                <div className="flex flex-col gap-2 text-foreground">
+                  <p className="text-sm leading-4 font-medium tracking-[1.4px]">{slide.eyebrow}</p>
+                  <h1 className="text-[32px] leading-13 font-bold lg:text-[43px] lg:leading-17.5">
+                    {slide.title[0]}
+                    <br />
+                    {slide.title[1]}
+                  </h1>
                 </div>
-                <Button asChild size="sm" radius="md" className="w-35">
-                  <Link to="/" hash="catalogo" search={(prev) => patchSearch(prev, slide.search)}>
-                    EXPLORAR
-                  </Link>
-                </Button>
+                <p className="max-w-139.25 text-sm leading-6 text-sand">{slide.text}</p>
               </div>
+              <Button asChild size="sm" radius="md" className="w-35">
+                <Link to="/" hash="catalogo" search={(prev) => patchSearch(prev, slide.search)}>
+                  EXPLORAR
+                </Link>
+              </Button>
             </div>
-            <Controls carousel={carousel} className="absolute bottom-7 left-10 lg:left-12" />
           </div>
-          <div className="relative h-full w-80 shrink-0 overflow-hidden rounded-2xl lg:w-112.5">
-            {SLIDES.map((s, index) => (
-              <NftImage
-                key={s.image.slug}
-                image={s.image}
-                width={450}
-                height={450}
-                sizes="(min-width: 1024px) 450px, 320px"
-                priority={index === 0}
-                className={cn(
-                  'absolute inset-0 size-full rounded-2xl transition-opacity duration-700 ease-in-out',
-                  index === active ? 'opacity-100' : 'pointer-events-none opacity-0',
-                )}
-              />
-            ))}
+          <Controls carousel={carousel} className="absolute bottom-7 left-10 lg:left-12" />
+        </div>
+        <div className="relative h-full w-80 shrink-0 overflow-hidden rounded-2xl lg:w-112.5">
+          {SLIDES.map((s, index) => (
+            <NftImage
+              key={s.image.slug}
+              image={s.image}
+              width={450}
+              height={450}
+              sizes="(min-width: 1024px) 450px, 320px"
+              loading={index === 0 ? 'eager' : 'lazy'}
+              fetchPriority={index === 0 ? 'high' : 'auto'}
+              className={cn(
+                'absolute inset-0 size-full rounded-2xl transition-opacity duration-700 ease-in-out',
+                index === active ? 'opacity-100' : 'pointer-events-none opacity-0',
+              )}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  ) : (
+    <section
+      aria-label="Destaques"
+      aria-roledescription="carrossel"
+      {...carousel.holdProps}
+      className="relative flex flex-col items-center gap-1 overflow-hidden rounded-xl bg-card px-4 pt-4 pb-1"
+    >
+      <span aria-hidden="true" className="absolute -top-8 -left-20 size-62 rounded-full bg-primary/10" />
+      <span aria-hidden="true" className="absolute -top-2.5 left-18.25 size-62 rounded-full bg-primary/5" />
+      <div aria-live={carousel.playing ? 'off' : 'polite'} className="relative w-full">
+        <div key={active} className="flex w-full animate-in items-center gap-2 duration-500 fade-in-0">
+          <div className="flex min-w-0 flex-1 flex-col">
+            <div className="flex flex-col gap-1.5">
+              <p className="text-xs leading-4 font-medium text-foreground">{slide.eyebrow}</p>
+              <h1 className="text-base leading-6 font-bold text-foreground xs:text-lg xs:leading-7.25">
+                {slide.mobileTitle[0]}
+                <br />
+                {slide.mobileTitle[1]}
+              </h1>
+              <p className="text-xs leading-4.5 text-sand">{slide.mobileText}</p>
+            </div>
+            <Link
+              to="/"
+              hash="catalogo"
+              search={(prev) => patchSearch(prev, slide.search)}
+              className="mt-2 inline-flex items-center gap-2 self-start rounded-xs text-xs leading-3.5 font-bold text-brand outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              EXPLORAR
+              <Icon icon={ArrowRightIcon} size={16} />
+            </Link>
+          </div>
+          <div className="relative h-29 w-27.5 shrink-0 xs:h-36.5 xs:w-34.5">
+            <NftImage
+              image={slide.image}
+              width={138}
+              height={138}
+              sizes="(min-width: 375px) 138px, 110px"
+              loading="eager"
+              className="size-27.5 rounded-2xl xs:size-34.5"
+            />
+            <NftImage
+              image={slide.secondaryImage}
+              width={58}
+              height={58}
+              sizes="58px"
+              loading="eager"
+              className="absolute top-17.5 left-2.5 size-11.5 rounded-2xl border border-card xs:top-22 xs:left-3.5 xs:size-14.5"
+            />
           </div>
         </div>
-      </section>
-
-      <section
-        aria-label="Destaques"
-        aria-roledescription="carrossel"
-        {...carousel.holdProps}
-        className="relative flex flex-col items-center gap-1 overflow-hidden rounded-xl bg-card px-4 pt-4 pb-1 md:hidden"
-      >
-        <span aria-hidden="true" className="absolute -top-8 -left-20 size-62 rounded-full bg-primary/10" />
-        <span aria-hidden="true" className="absolute -top-2.5 left-18.25 size-62 rounded-full bg-primary/5" />
-        <div aria-live={carousel.playing ? 'off' : 'polite'} className="relative w-full">
-          <div key={active} className="flex w-full animate-in items-center gap-2 duration-500 fade-in-0">
-            <div className="flex min-w-0 flex-1 flex-col">
-              <div className="flex flex-col gap-1.5">
-                <p className="text-xs leading-4 font-medium text-foreground">{slide.eyebrow}</p>
-                <h1 className="text-base leading-6 font-bold text-foreground xs:text-lg xs:leading-7.25">
-                  {slide.mobileTitle[0]}
-                  <br />
-                  {slide.mobileTitle[1]}
-                </h1>
-                <p className="text-xs leading-4.5 text-sand">{slide.mobileText}</p>
-              </div>
-              <Link
-                to="/"
-                hash="catalogo"
-                search={(prev) => patchSearch(prev, slide.search)}
-                className="mt-2 inline-flex items-center gap-2 self-start rounded-xs text-xs leading-3.5 font-bold text-brand outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              >
-                EXPLORAR
-                <Icon icon={ArrowRightIcon} size={16} />
-              </Link>
-            </div>
-            <div className="relative h-29 w-27.5 shrink-0 xs:h-36.5 xs:w-34.5">
-              <NftImage
-                image={slide.image}
-                width={138}
-                height={138}
-                sizes="(min-width: 375px) 138px, 110px"
-                priority={active === 0}
-                className="size-27.5 rounded-2xl xs:size-34.5"
-              />
-              <NftImage
-                image={slide.secondaryImage}
-                width={58}
-                height={58}
-                sizes="58px"
-                className="absolute top-17.5 left-2.5 size-11.5 rounded-2xl border border-card xs:top-22 xs:left-3.5 xs:size-14.5"
-              />
-            </div>
-          </div>
-        </div>
-        <Controls carousel={carousel} className="relative" />
-      </section>
-    </>
+      </div>
+      <Controls carousel={carousel} className="relative" />
+    </section>
   )
 }

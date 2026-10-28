@@ -1,7 +1,7 @@
 import { cn } from 'cn'
 import type { NftImage as NftImageData } from '@/contracts/nft'
 
-const WIDTHS = [250, 450, 900] as const
+const WIDTHS = [250, 450, 650, 900] as const
 
 const srcFor = (slug: string, width: number) => `/images/nfts/${slug}-${width}.webp`
 
@@ -10,14 +10,16 @@ export function NftImage({
   sizes,
   width,
   height,
-  priority = false,
+  loading = 'lazy',
+  fetchPriority = 'auto',
   className,
 }: {
   image: NftImageData
   sizes: string
   width: number
   height: number
-  priority?: boolean
+  loading?: 'eager' | 'lazy'
+  fetchPriority?: 'high' | 'auto'
   className?: string
 }) {
   return (
@@ -28,9 +30,9 @@ export function NftImage({
       alt={image.alt}
       width={width}
       height={height}
-      loading={priority ? 'eager' : 'lazy'}
-      decoding={priority ? 'sync' : 'async'}
-      fetchPriority={priority ? 'high' : 'auto'}
+      loading={loading}
+      decoding={fetchPriority === 'high' ? 'sync' : 'async'}
+      fetchPriority={fetchPriority}
       className={cn('object-cover', className)}
     />
   )
