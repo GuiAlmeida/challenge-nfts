@@ -158,12 +158,12 @@ Mantidos como no Figma, apesar de comentários sugerirem o contrário: grade esc
 
 ## Performance
 
-Os resultados e a análise completa estão em [`lighthouse/reports/summary.md`](lighthouse/reports/summary.md). No desktop as metas são atingidas. No mobile a Performance fica abaixo de 90 por duas causas medidas:
+Os resultados e a análise estão em [`lighthouse/reports/summary.md`](lighthouse/reports/summary.md), medidos contra a aplicação publicada. No desktop as duas páginas marcam 100. No mobile o início marca 88 e o detalhe 90, com Accessibility, Best Practices e SEO em 100 e CLS 0. Duas causas seguram o mobile:
 
-- A renderização acontece no cliente. A primeira pintura depende de baixar e executar o bundle inicial (React DOM, TanStack Router e Query, Radix), o que leva mais de 3 s com a rede e a CPU simuladas do perfil mobile. Renderizar no servidor ou pré-renderizar ficaria fora da stack fixa do desafio.
-- O backend roda no navegador. Os dados dependem do MSW (cerca de 176 KB comprimidos) e do registro do service worker, e o LCP é a primeira imagem do catálogo, que espera esses dados. Com uma API real esse custo desaparece. Para reduzir o impacto, o mock só começa a carregar depois da primeira pintura, e as requisições esperam por ele.
+- A renderização acontece no cliente. A primeira pintura depende de baixar e executar o bundle inicial (React DOM, TanStack Router e Query, zod, Axios e os primitivos Radix do header), cerca de 240 KB comprimidos, o que leva 2,7 s com a rede e a CPU simuladas do perfil mobile. Renderizar no servidor ou pré-renderizar ficaria fora da stack fixa do desafio.
+- O backend roda no navegador. O LCP é a primeira imagem do catálogo ou da galeria, que espera os dados, e os dados esperam o MSW (cerca de 105 KB comprimidos) e o registro do service worker. Com uma API real esse custo desaparece. O mock só começa a carregar depois da primeira pintura, e as requisições esperam por ele.
 
-As imagens já são WebP em três larguras com `srcset`, as primeiras têm prioridade alta, a fonte é pré-carregada, o código é dividido por rota e os skeletons têm as dimensões reais, o que mantém o CLS em 0.
+O que já está aplicado: código dividido por rota e `sideEffects` declarado; só um hero e uma galeria renderizados por largura, para o layout escondido não baixar imagem; WebP em quatro larguras com `srcset` e prioridade alta só na imagem candidata a LCP; fonte pré-carregada; skeletons com as dimensões reais. Uma moldura estática no `index.html` foi testada e descartada: adianta a pintura real, mas faz o Lighthouse contar o trabalho do React como bloqueio, e a nota cai.
 
 ## Limitações
 

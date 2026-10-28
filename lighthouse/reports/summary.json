@@ -3,25 +3,25 @@
     "page": "home",
     "profile": "mobile",
     "scores": {
-      "performance": 69,
+      "performance": 88,
       "accessibility": 100,
       "best-practices": 100,
       "seo": 100
     },
-    "lcpMs": 5717,
+    "lcpMs": 3354,
     "cls": 0,
-    "tbtMs": 140
+    "tbtMs": 56
   },
   {
     "page": "home",
     "profile": "desktop",
     "scores": {
-      "performance": 98,
+      "performance": 100,
       "accessibility": 100,
       "best-practices": 100,
       "seo": 100
     },
-    "lcpMs": 1016,
+    "lcpMs": 653,
     "cls": 0,
     "tbtMs": 0
   },
@@ -29,25 +29,25 @@
     "page": "nft-detail",
     "profile": "mobile",
     "scores": {
-      "performance": 73,
+      "performance": 90,
       "accessibility": 100,
       "best-practices": 100,
       "seo": 100
     },
-    "lcpMs": 4669,
+    "lcpMs": 3074,
     "cls": 0,
-    "tbtMs": 174
+    "tbtMs": 110
   },
   {
     "page": "nft-detail",
     "profile": "desktop",
     "scores": {
-      "performance": 98,
+      "performance": 100,
       "accessibility": 100,
       "best-practices": 100,
       "seo": 100
     },
-    "lcpMs": 1018,
+    "lcpMs": 604,
     "cls": 0,
     "tbtMs": 0
   }

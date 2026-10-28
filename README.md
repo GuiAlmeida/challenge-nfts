@@ -2,7 +2,7 @@
 
 Implementação do desafio Frontend "Marketplace de NFTs" (enunciado em [`docs/CHALLENGE.md`](docs/CHALLENGE.md)). A API REST, a sessão, as carteiras, o pagamento e os eventos em tempo real são simulados no navegador: REST com MSW e tempo real com o cliente `socket.io-client` real conectado a um servidor Socket.IO simulado pelo MSW. A arquitetura, os contratos e as decisões estão em [`ARCHITECTURE.md`](ARCHITECTURE.md).
 
-**Aplicação publicada:** _a URL entra aqui após o deploy na Vercel._
+**Aplicação publicada:** [https://challenge-nfts.vercel.app](https://challenge-nfts.vercel.app)
 
 ## Stack
 
@@ -34,17 +34,17 @@ pnpm dev
 
 ## Comandos
 
-| Comando                                        | O que faz                                                                    |
-| ---------------------------------------------- | ---------------------------------------------------------------------------- |
-| `pnpm dev`                                     | desenvolvimento com mocks                                                    |
-| `pnpm build` / `pnpm build:demo`               | build de produção / build com mocks (deploy, testes e Lighthouse)            |
-| `pnpm preview`                                 | serve `dist/` em `http://localhost:4173`                                     |
-| `pnpm typecheck` / `pnpm lint` / `pnpm format` | TypeScript, ESLint (inclui as fronteiras entre camadas) e Prettier           |
-| `pnpm test:unit`                               | Vitest com as regras puras                                                   |
-| `pnpm test:e2e`                                | build demo + Playwright nos projetos `desktop` (1440) e `mobile` (Pixel 7)   |
-| `pnpm test:e2e:fast`                           | Playwright sem rebuild, reaproveitando o `dist/` atual                       |
-| `pnpm test:visual`                             | build demo + regressão visual de início, detalhe, carrinho e pagamento       |
-| `pnpm lighthouse`                              | 3 medições por página e perfil contra `pnpm preview`; relatórios versionados |
+| Comando                                        | O que faz                                                                           |
+| ---------------------------------------------- | ----------------------------------------------------------------------------------- |
+| `pnpm dev`                                     | desenvolvimento com mocks                                                           |
+| `pnpm build` / `pnpm build:demo`               | build de produção / build com mocks (deploy, testes e Lighthouse)                   |
+| `pnpm preview`                                 | serve `dist/` em `http://localhost:4173`                                            |
+| `pnpm typecheck` / `pnpm lint` / `pnpm format` | TypeScript, ESLint (inclui as fronteiras entre camadas) e Prettier                  |
+| `pnpm test:unit`                               | Vitest com as regras puras                                                          |
+| `pnpm test:e2e`                                | build demo + Playwright nos projetos `desktop` (1440) e `mobile` (Pixel 7)          |
+| `pnpm test:e2e:fast`                           | Playwright sem rebuild, reaproveitando o `dist/` atual                              |
+| `pnpm test:visual`                             | build demo + regressão visual de início, detalhe, carrinho e pagamento              |
+| `pnpm lighthouse`                              | 3 medições por página e perfil; `LH_BASE_URL` define a URL medida (padrão: preview) |
 
 ## Credenciais fictícias
 
@@ -112,7 +112,7 @@ Em todos os casos, comece com `?mock-reset=1` para partir do estado conhecido.
 
 ## Lighthouse
 
-`pnpm lighthouse` mede início e detalhe do NFT, nos perfis mobile e desktop, três vezes cada, contra `pnpm preview` do build demo. Os relatórios HTML e JSON de cada medição e o resumo com as medianas, LCP, CLS, TBT, versões e condições ficam em [`lighthouse/reports/`](lighthouse/reports/summary.md). A configuração das auditorias está em `lighthouse/`. Antes de rodar: `pnpm build:demo && pnpm preview`.
+`pnpm lighthouse` mede início e detalhe do NFT, nos perfis mobile e desktop, três vezes cada, e grava os relatórios HTML e JSON de cada medição mais o resumo com as medianas, LCP, CLS, TBT, versões e condições em [`lighthouse/reports/`](lighthouse/reports/summary.md). Os relatórios versionados foram medidos contra a aplicação publicada, com `LH_BASE_URL=https://challenge-nfts.vercel.app pnpm lighthouse`, porque é o ambiente de avaliação e serve em HTTP/2 com brotli. Sem `LH_BASE_URL` o script mede `pnpm preview` (rode `pnpm build:demo && pnpm preview` antes), que serve em HTTP/1.1 e marca uns 18 pontos a menos no mobile; a análise no resumo explica a diferença. A configuração das auditorias está em `lighthouse/`.
 
 ## Estrutura
 
