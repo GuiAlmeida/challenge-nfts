@@ -49,7 +49,7 @@ function RootLayout() {
         <OfflineBanner />
         <ReconnectingBanner reconnecting={realtime === 'reconnecting'} />
         <AppHeader user={user} cart={<MiniCart />} onLogout={() => void logout()} />
-        <main id="conteudo" className={showTabBar ? 'flex-1 pb-24 md:pb-0' : 'flex-1'}>
+        <main id="conteudo" className={showTabBar ? 'flex-1 pb-32 md:pb-0' : 'flex-1'}>
           <Outlet />
         </main>
         <div className={footerMobileHidden ? 'hidden md:block' : undefined}>

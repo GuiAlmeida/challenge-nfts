@@ -14,7 +14,7 @@ export function PasswordInput({ className, ...props }: Omit<React.ComponentProps
         onClick={() => setVisible((v) => !v)}
         aria-label={visible ? 'Ocultar senha' : 'Mostrar senha'}
         aria-pressed={visible}
-        className="absolute top-1/2 right-3 flex size-7 -translate-y-1/2 items-center justify-center rounded-xs text-foreground outline-none hover:text-brand focus-visible:ring-2 focus-visible:ring-ring"
+        className="absolute top-1/2 right-3 flex size-7 -translate-y-1/2 items-center justify-center rounded-xs text-sand outline-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring"
       >
         <Icon icon={visible ? EyeOffOutlineIcon : EyeOffIcon} size={18} />
       </button>

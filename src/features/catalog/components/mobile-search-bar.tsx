@@ -16,7 +16,7 @@ export function MobileSearchBar({ search, onOpenFilters, activeCount }: { search
           event.preventDefault()
           void patch({ q: value.trim() || undefined })
         }}
-        className="flex h-11.25 flex-1 items-center gap-2 rounded-[10px] bg-card pr-3 pl-3 focus-within:ring-2 focus-within:ring-ring/60"
+        className="flex h-11.25 min-w-0 flex-1 items-center gap-2 rounded-[10px] bg-card pr-3 pl-3 focus-within:ring-2 focus-within:ring-ring/60"
       >
         <label htmlFor={inputId} className="sr-only">
           Buscar NFTs

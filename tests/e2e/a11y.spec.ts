@@ -123,8 +123,9 @@ test.describe('acessibilidade (README 11)', () => {
     await expect(trigger).toBeFocused()
   })
 
-  test('sem rolagem horizontal em 390, 768 e 1440', async ({ page, isMobile }) => {
-    const widths = isMobile ? [390] : [768, 1440]
+  test('sem rolagem horizontal de 320 a 1440', async ({ page, isMobile }) => {
+    test.slow()
+    const widths = isMobile ? [320, 360, 390] : [768, 1024, 1440]
     await signInWithSeededCart(page)
     for (const width of widths) {
       await page.setViewportSize({ width, height: 900 })

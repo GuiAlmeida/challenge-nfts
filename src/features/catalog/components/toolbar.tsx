@@ -32,7 +32,7 @@ export function Toolbar({
 }) {
   return (
     <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-4">
-      <nav aria-label="Filtrar catálogo" className="flex max-w-full min-w-0 gap-5 overflow-x-auto text-[15px] leading-4 font-medium">
+      <nav aria-label="Filtrar catálogo" className="flex max-w-full min-w-0 gap-3 overflow-x-auto text-[15px] leading-4 font-medium [scrollbar-width:none] md:gap-5">
         {TABS.map((tab) => {
           const active = search.tab === tab.value
           return (
@@ -52,7 +52,7 @@ export function Toolbar({
           )
         })}
       </nav>
-      <div className="flex items-center gap-4">
+      <div className="flex max-w-full min-w-0 items-center gap-4">
         <button
           type="button"
           onClick={onOpenFilters}
@@ -61,12 +61,13 @@ export function Toolbar({
           <Icon icon={FilterIcon} size={16} />
           Filtros{activeFilterCount > 0 ? ` (${activeFilterCount})` : ''}
         </button>
-        <label className="flex items-center gap-1 text-[15px] leading-4 text-foreground">
-          <span className="whitespace-nowrap">Ordenar por:</span>
+        <label className="flex min-w-0 items-center gap-1 text-[15px] leading-4 text-foreground">
+          <span className="whitespace-nowrap xs:hidden">Ordenar:</span>
+          <span className="hidden whitespace-nowrap xs:inline">Ordenar por:</span>
           <Select value={search.sort} onValueChange={(value) => onSort(sortSchema.parse(value))}>
             <SelectTrigger
               aria-label="Ordenar por"
-              className="h-auto gap-1 rounded-xs border-0 bg-transparent p-0 text-[15px] text-foreground shadow-none hover:text-brand focus-visible:ring-2 focus-visible:ring-ring dark:bg-transparent dark:hover:bg-transparent [&_svg:not([class*='text-'])]:text-foreground"
+              className="h-auto min-w-0 gap-1 rounded-xs border-0 bg-transparent p-0 text-[15px] text-foreground shadow-none hover:text-brand focus-visible:ring-2 focus-visible:ring-ring dark:bg-transparent dark:hover:bg-transparent [&_svg:not([class*='text-'])]:text-foreground"
             >
               <SelectValue>{SORT_LABEL[search.sort]}</SelectValue>
             </SelectTrigger>

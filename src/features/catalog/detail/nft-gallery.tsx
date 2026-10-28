@@ -1,8 +1,7 @@
-import { useCanGoBack, useRouter } from '@tanstack/react-router'
 import { cn } from 'cn'
 import { useState } from 'react'
-import { ArrowLeftIcon, ZoomIcon } from '@/assets/icons'
-import { Icon, NftImage } from '@/components/layout'
+import { ZoomIcon } from '@/assets/icons'
+import { BackButton, Icon, NftImage } from '@/components/layout'
 import type { NftDetail } from '@/contracts/nft'
 import { FavoriteButton } from '@/features/favorites'
 import { ImageZoomDialog } from '../components/image-zoom-dialog'
@@ -10,10 +9,7 @@ import { ImageZoomDialog } from '../components/image-zoom-dialog'
 export function NftGallery({ nft }: { nft: NftDetail }) {
   const [index, setIndex] = useState(0)
   const [zoom, setZoom] = useState(false)
-  const router = useRouter()
-  const canGoBack = useCanGoBack()
   const current = nft.gallery[index] ?? nft.image
-  const goBack = () => (canGoBack ? router.history.back() : void router.navigate({ to: '/' }))
 
   return (
     <>
@@ -49,16 +45,9 @@ export function NftGallery({ nft }: { nft: NftDetail }) {
         </div>
       </div>
 
-      <div className="relative flex flex-col gap-2 bg-linear-[138deg] from-card from-[12%] to-surface-raised px-7 pt-6 pb-15 md:hidden">
+      <div className="relative flex flex-col gap-2 bg-linear-[138deg] from-card from-[12%] to-surface-raised px-7 pt-6 md:hidden">
         <div className="flex items-center justify-between">
-          <button
-            type="button"
-            onClick={goBack}
-            aria-label="Voltar"
-            className="flex size-8.75 items-center justify-center rounded-full border border-border bg-surface-raised text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            <Icon icon={ArrowLeftIcon} size={20} />
-          </button>
+          <BackButton />
           <FavoriteButton nftId={nft.id} name={nft.name} size={35} />
         </div>
         <button
@@ -69,7 +58,7 @@ export function NftGallery({ nft }: { nft: NftDetail }) {
         >
           <NftImage image={current} width={361} height={356} sizes="(min-width: 414px) 361px, 90vw" priority className="aspect-[361/356] w-full" />
         </button>
-        <div role="group" aria-label="Imagens da galeria" className="absolute inset-x-0 bottom-4 flex justify-center gap-2">
+        <div role="group" aria-label="Imagens da galeria" className="absolute inset-x-0 bottom-9 flex justify-center">
           {nft.gallery.map((image, i) => (
             <button
               key={`${image.slug}-${i}`}
@@ -77,11 +66,10 @@ export function NftGallery({ nft }: { nft: NftDetail }) {
               onClick={() => setIndex(i)}
               aria-label={`Imagem ${i + 1} de ${nft.gallery.length}`}
               aria-pressed={i === index}
-              className={cn(
-                'size-1.75 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring',
-                i === index ? 'bg-primary' : 'bg-border-soft',
-              )}
-            />
+              className="flex size-6 items-center justify-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <span aria-hidden="true" className={cn('size-1.75 rounded-full', i === index ? 'bg-primary' : 'bg-border-soft')} />
+            </button>
           ))}
         </div>
       </div>

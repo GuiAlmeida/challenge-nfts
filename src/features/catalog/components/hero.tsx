@@ -141,7 +141,7 @@ export function Hero() {
         aria-label="Destaques"
         aria-roledescription="carrossel"
         {...carousel.holdProps}
-        className="relative flex flex-col items-center gap-4 overflow-hidden rounded-xl bg-card p-4 md:hidden"
+        className="relative flex flex-col items-center gap-1 overflow-hidden rounded-xl bg-card px-4 pt-4 pb-1 md:hidden"
       >
         <span aria-hidden="true" className="absolute -top-8 -left-20 size-62 rounded-full bg-primary/10" />
         <span aria-hidden="true" className="absolute -top-2.5 left-18.25 size-62 rounded-full bg-primary/5" />
@@ -150,7 +150,7 @@ export function Hero() {
             <div className="flex min-w-0 flex-1 flex-col">
               <div className="flex flex-col gap-1.5">
                 <p className="text-xs leading-4 font-medium text-foreground">{slide.eyebrow}</p>
-                <h1 className="w-47.5 text-lg leading-7.25 font-bold text-foreground">
+                <h1 className="text-base leading-6 font-bold text-foreground xs:text-lg xs:leading-7.25">
                   {slide.mobileTitle[0]}
                   <br />
                   {slide.mobileTitle[1]}
@@ -167,14 +167,21 @@ export function Hero() {
                 <Icon icon={ArrowRightIcon} size={16} />
               </Link>
             </div>
-            <div className="relative h-36.5 w-34.5 shrink-0">
-              <NftImage image={slide.image} width={138} height={138} sizes="138px" priority={active === 0} className="size-34.5 rounded-2xl" />
+            <div className="relative h-29 w-27.5 shrink-0 xs:h-36.5 xs:w-34.5">
+              <NftImage
+                image={slide.image}
+                width={138}
+                height={138}
+                sizes="(min-width: 375px) 138px, 110px"
+                priority={active === 0}
+                className="size-27.5 rounded-2xl xs:size-34.5"
+              />
               <NftImage
                 image={slide.secondaryImage}
                 width={58}
                 height={58}
                 sizes="58px"
-                className="absolute top-22 left-3.5 size-14.5 rounded-2xl border border-card"
+                className="absolute top-17.5 left-2.5 size-11.5 rounded-2xl border border-card xs:top-22 xs:left-3.5 xs:size-14.5"
               />
             </div>
           </div>

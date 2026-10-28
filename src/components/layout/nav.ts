@@ -15,5 +15,5 @@ export function hidesFooterOnMobile(pathname: string): boolean {
 
 export function mobileToastOffset(pathname: string): number {
   if (/^\/nft\//.test(pathname)) return 176
-  return hidesTabBar(pathname) ? 16 : 104
+  return hidesTabBar(pathname) ? 16 : 136
 }
