@@ -140,7 +140,7 @@ export function NftDetailPage({ nftId }: { nftId: string }) {
   const query = useNft(nftId)
   if (query.isPending) {
     return (
-      <PageContainer className="py-8">
+      <PageContainer className="pt-8 pb-16">
         <NftDetailSkeleton />
       </PageContainer>
     )

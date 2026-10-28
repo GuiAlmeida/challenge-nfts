@@ -4,12 +4,16 @@ import { cn } from 'cn'
 import { useId, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
+import { Skeleton } from '@/components/ui/skeleton'
 import { Slider } from '@/components/ui/slider'
+import { networkSchema } from '@/contracts/common'
 import type { NftListResponse } from '@/contracts/nft'
 import { type CatalogSearch, splitCsv } from '@/contracts/search'
 import { formatPriceLabel, hasActiveFilters, isPriceRangeWhole, priceStepsFrom, sortFacetsByLabel, stepToEth, toggleCsvValue } from '../catalog.rules'
 
 type Facets = NftListResponse['facets']
+
+const COLLECTION_PLACEHOLDER_ROWS = 9
 
 export interface FiltersProps {
   facets: Facets | undefined
@@ -48,17 +52,27 @@ function FacetList({
   selected,
   onToggle,
   pending,
+  placeholderRows,
 }: {
   labelledBy: string
   items: Facets['collections']
   selected: string[]
   onToggle: (value: string) => void
   pending: boolean
+  placeholderRows: number
 }) {
   const id = useId()
   return (
     <div role="group" aria-labelledby={labelledBy} aria-busy={pending}>
       <ul className="flex flex-col">
+        {pending
+          ? Array.from({ length: placeholderRows }, (_, i) => (
+              <li key={i} className="flex h-10 items-center justify-between" aria-hidden="true">
+                <Skeleton className="h-4 w-3/5" />
+                <Skeleton className="h-4 w-8" />
+              </li>
+            ))
+          : null}
         {items.map((item) => {
           const checked = selected.includes(item.value)
           const inputId = `${id}-${item.value}`
@@ -90,28 +104,34 @@ function PriceFilter({ range, search, onPatch }: { range: Facets['priceRange']; 
     onPatch(whole ? { priceMin: undefined, priceMax: undefined } : { priceMin: lo, priceMax: hi })
   }
   return (
-    <FilterSection title="Faixa de preço">
-      {() => (
-        <div className="flex flex-col gap-3">
-          <Slider
-            min={steps.bounds[0]}
-            max={steps.bounds[1]}
-            step={1}
-            minStepsBetweenThumbs={0}
-            value={value}
-            onValueChange={(next) => setValue([next[0] ?? steps.bounds[0], next[1] ?? steps.bounds[1]])}
-            thumbLabels={['Preço mínimo em ETH', 'Preço máximo em ETH']}
-            aria-describedby={labelId}
-          />
-          <p id={labelId} aria-live="polite" className="text-[15px] leading-4 text-foreground">
-            Preço: {formatPriceLabel(lo)} - {formatPriceLabel(hi)} ETH
-          </p>
-          <Button type="button" size="xs" radius="md" className="h-9 self-start px-3" onClick={apply}>
-            Aplicar
-          </Button>
-        </div>
-      )}
-    </FilterSection>
+    <div className="flex flex-col gap-3">
+      <Slider
+        min={steps.bounds[0]}
+        max={steps.bounds[1]}
+        step={1}
+        minStepsBetweenThumbs={0}
+        value={value}
+        onValueChange={(next) => setValue([next[0] ?? steps.bounds[0], next[1] ?? steps.bounds[1]])}
+        thumbLabels={['Preço mínimo em ETH', 'Preço máximo em ETH']}
+        aria-describedby={labelId}
+      />
+      <p id={labelId} aria-live="polite" className="text-[15px] leading-4 text-foreground">
+        Preço: {formatPriceLabel(lo)} - {formatPriceLabel(hi)} ETH
+      </p>
+      <Button type="button" size="xs" radius="md" className="h-9 self-start px-3" onClick={apply}>
+        Aplicar
+      </Button>
+    </div>
+  )
+}
+
+function PriceFilterSkeleton() {
+  return (
+    <div className="flex flex-col gap-3" aria-hidden="true">
+      <Skeleton className="h-4 w-full" />
+      <Skeleton className="h-4 w-1/2" />
+      <Skeleton className="h-9 w-20 rounded-md" />
+    </div>
   )
 }
 
@@ -140,17 +160,24 @@ export function Filters({ facets, search, onPatch, className }: FiltersProps) {
             selected={splitCsv(search.collection)}
             onToggle={(value) => onPatch({ collection: toggleCsvValue(search.collection, value) })}
             pending={pending}
+            placeholderRows={COLLECTION_PLACEHOLDER_ROWS}
           />
         )}
       </FilterSection>
-      {facets ? (
-        <PriceFilter
-          key={`${facets.priceRange.min}:${facets.priceRange.max}:${search.priceMin ?? ''}:${search.priceMax ?? ''}`}
-          range={facets.priceRange}
-          search={search}
-          onPatch={onPatch}
-        />
-      ) : null}
+      <FilterSection title="Faixa de preço">
+        {() =>
+          facets ? (
+            <PriceFilter
+              key={`${facets.priceRange.min}:${facets.priceRange.max}:${search.priceMin ?? ''}:${search.priceMax ?? ''}`}
+              range={facets.priceRange}
+              search={search}
+              onPatch={onPatch}
+            />
+          ) : (
+            <PriceFilterSkeleton />
+          )
+        }
+      </FilterSection>
       <FilterSection title="Rede">
         {(titleId) => (
           <FacetList
@@ -159,6 +186,7 @@ export function Filters({ facets, search, onPatch, className }: FiltersProps) {
             selected={splitCsv(search.network)}
             onToggle={(value) => onPatch({ network: toggleCsvValue(search.network, value) })}
             pending={pending}
+            placeholderRows={networkSchema.options.length}
           />
         )}
       </FilterSection>
