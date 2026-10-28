@@ -1,4 +1,4 @@
-import type { Page } from '@playwright/test'
+import { expect, type Page } from '@playwright/test'
 
 export async function openWithMocks(page: Page, url: string): Promise<void> {
   await page.goto(url)
@@ -42,4 +42,28 @@ export async function signIn(page: Page, email = 'ana@kurio.test', password = 'K
   await page.goto('/login')
   await fillLogin(page, email, password)
   await page.waitForURL((url) => !url.pathname.startsWith('/login'))
+}
+
+export async function addToCart(page: Page, isMobile: boolean, nftId: string): Promise<void> {
+  await page.goto(`/nft/${nftId}`)
+  await page.getByRole('button', { name: isMobile ? 'Adicionar ao carrinho' : 'ADICIONAR AO CARRINHO', exact: true }).click()
+  if (isMobile) {
+    await expect(page.getByText('Adicionado ao carrinho').filter({ visible: true })).toBeVisible()
+    return
+  }
+  await expect(page.getByRole('dialog', { name: 'Resumo do carrinho' })).toBeVisible()
+  await page.keyboard.press('Escape')
+}
+
+export async function connectWallet(page: Page, provider = 'MetaMask'): Promise<void> {
+  await page.getByRole('radio', { name: provider, exact: true }).click()
+  await expect(page.getByText(`${provider} conectada.`).filter({ visible: true })).toBeVisible()
+}
+
+export async function placeOrder(page: Page): Promise<string> {
+  await page.goto('/checkout')
+  await connectWallet(page)
+  await page.getByRole('button', { name: 'Confirmar compra' }).click()
+  await page.waitForURL(/\/orders\/ord_/)
+  return new URL(page.url()).pathname.split('/').pop() ?? ''
 }

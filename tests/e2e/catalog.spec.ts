@@ -68,3 +68,26 @@ test.describe('catálogo (README 1)', () => {
     await expect(cards(page)).toHaveCount(9)
   })
 })
+
+test.describe('carrossel do hero', () => {
+  test('troca sozinho, para quando o usuário escolhe um destaque e não roda com movimento reduzido', async ({ page }) => {
+    await page.clock.install()
+    await openWithMocks(page, '/?mock-reset=1')
+    const hero = page.getByRole('region', { name: 'Destaques' }).filter({ visible: true })
+    await expect(hero.getByText('Bem-vindo à Kurio')).toBeVisible()
+    await page.mouse.move(0, 0)
+    await page.clock.runFor(9_100)
+    await expect(hero.getByText('Novos lançamentos')).toBeVisible()
+
+    await hero.getByRole('button', { name: 'Destaque 3 de 3: Em alta' }).click()
+    await page.mouse.move(0, 0)
+    await page.clock.runFor(20_000)
+    await expect(hero.getByText('Em alta')).toBeVisible()
+
+    await page.emulateMedia({ reducedMotion: 'reduce' })
+    await page.reload()
+    await page.mouse.move(0, 0)
+    await page.clock.runFor(20_000)
+    await expect(page.getByRole('region', { name: 'Destaques' }).filter({ visible: true }).getByText('Bem-vindo à Kurio')).toBeVisible()
+  })
+})

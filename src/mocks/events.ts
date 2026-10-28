@@ -32,6 +32,7 @@ export function orderUpdatedEnvelope(order: OrderRecord): EventEnvelope<OrderUpd
     payload: {
       status: order.status,
       txHash: order.txHash ?? undefined,
+      explorerUrl: order.explorerUrl ?? undefined,
       receipt: order.status === 'confirmed' ? order.receipt : undefined,
     },
   }

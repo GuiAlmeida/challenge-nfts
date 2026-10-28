@@ -4,7 +4,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 export function NftCardSkeleton() {
   return (
     <div className="flex w-full flex-col gap-3" aria-hidden="true">
-      <Skeleton className="aspect-[258/300] w-full rounded-md" />
+      <Skeleton className="aspect-square w-full rounded-[20px] md:rounded-md" />
       <Skeleton className="h-4 w-3/4" />
       <Skeleton className="h-4 w-1/3" />
     </div>

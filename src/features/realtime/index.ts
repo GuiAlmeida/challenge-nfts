@@ -1,2 +1,5 @@
 export { connectSocket, disconnectSocket, getSocket } from './socket'
 export { createEventGuard, type EventGuard, type GuardDecision } from './event-guard'
+export { RealtimeProvider } from './realtime-provider'
+export { useRealtimeStatus, type RealtimeStatus } from './realtime-store'
+export { reconcile } from './reconcile'

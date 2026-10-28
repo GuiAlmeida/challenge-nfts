@@ -31,7 +31,7 @@ export function Toolbar({
   activeFilterCount: number
 }) {
   return (
-    <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-4">
+    <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-4">
       <nav aria-label="Filtrar catálogo" className="flex max-w-full min-w-0 gap-5 overflow-x-auto text-[15px] leading-4 font-medium">
         {TABS.map((tab) => {
           const active = search.tab === tab.value

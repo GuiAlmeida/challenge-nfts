@@ -29,11 +29,11 @@ export function BuyBar({ flow, name }: { flow: NftDetailFlow; name: string }) {
             variant="pill"
             size="lg"
             radius="pill"
-            className="w-49 px-0"
+            className="min-w-0 flex-1 px-0"
             onClick={flow.buy}
             disabled={flow.soldOut || flow.buying}
           >
-            {flow.buying ? 'Adicionando…' : flow.soldOut ? 'Esgotado' : 'Comprar NFT'}
+            {flow.buying ? 'Adicionando…' : flow.soldOut ? 'Esgotado' : 'Adicionar ao carrinho'}
           </Button>
           <Button asChild variant="subtle" size="icon-lg" radius="pill" aria-label="Ir para o carrinho">
             <Link to="/cart">

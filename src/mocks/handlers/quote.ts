@@ -114,6 +114,7 @@ export const quoteHandlers = [
     const blocked = await applyScenario(request)
     if (blocked) return blocked
     const owner = resolveOwner(request)
+    if (owner instanceof Response) return owner
     if (!owner) return fail(400, 'VALIDATION_ERROR', 'Carrinho não identificado.')
     const parsed = await parseBody(request, quoteRequestSchema)
     if (!parsed.ok) return parsed.response

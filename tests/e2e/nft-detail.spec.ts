@@ -23,9 +23,16 @@ test.describe('detalhe do NFT (README 2)', () => {
     await expect(quantity).toHaveText('10')
     await expect(plus).toBeDisabled()
 
-    await page.getByRole('button', { name: isMobile ? 'Comprar NFT' : 'COMPRAR', exact: true }).click()
-    await expect(page.getByText('Adicionado ao carrinho')).toBeVisible()
-    if (!isMobile) await expect(page.getByRole('link', { name: 'Carrinho, 10 itens' })).toBeVisible()
+    await page.getByRole('button', { name: isMobile ? 'Adicionar ao carrinho' : 'ADICIONAR AO CARRINHO', exact: true }).click()
+    if (isMobile) {
+      await expect(page.getByText('Adicionado ao carrinho')).toBeVisible()
+      return
+    }
+    const miniCart = page.getByRole('dialog', { name: 'Resumo do carrinho' })
+    await expect(miniCart.getByText('Seu carrinho (10)')).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Carrinho, 10 itens' })).toBeVisible()
+    await miniCart.getByRole('link', { name: 'Comprar' }).click()
+    await expect(page).toHaveURL(/\/login\?redirect=/)
   })
 
   test('edição esgotada fica desabilitada e nunca é a padrão', async ({ page }) => {

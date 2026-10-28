@@ -18,8 +18,3 @@ export function useCart() {
     gcTime: 10 * 60_000,
   })
 }
-
-export function useCartCount(): number {
-  const { data } = useCart()
-  return data?.itemCount ?? 0
-}

@@ -31,6 +31,7 @@ export type NftUpdatedPayload = z.infer<typeof nftUpdatedPayloadSchema>
 export const orderUpdatedPayloadSchema = z.object({
   status: z.enum(['pending', 'confirmed', 'declined']),
   txHash: z.string().optional(),
+  explorerUrl: z.string().optional(),
   receipt: z.unknown().optional(),
 })
 export type OrderUpdatedPayload = z.infer<typeof orderUpdatedPayloadSchema>

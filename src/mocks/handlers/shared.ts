@@ -76,9 +76,11 @@ export function authenticate(request: Request): AuthResult {
   return { ok: true, user, session }
 }
 
-export function optionalUser(request: Request): UserRecord | null {
+export function optionalUser(request: Request): UserRecord | null | Response {
+  const header = request.headers.get('authorization') ?? ''
+  if (!header.startsWith('Bearer ')) return null
   const result = authenticate(request)
-  return result.ok ? result.user : null
+  return result.ok ? result.user : result.response
 }
 
 export const guestCartId = (request: Request): string | null => request.headers.get('x-cart-id')?.trim() || null

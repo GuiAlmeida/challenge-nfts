@@ -21,7 +21,8 @@ export function afterSignIn(session: Session, queryClient: QueryClient): void {
   queryClient.removeQueries({ predicate: (query) => isPrivateKey(query.queryKey) })
   useSessionStore.getState().setSession(session)
   queryClient.setQueryData(authKeys.me(session.user.id), session)
-  void queryClient.invalidateQueries({ queryKey: ['cart'] })
+  queryClient.removeQueries({ queryKey: ['cart'] })
+  queryClient.removeQueries({ queryKey: ['quote'] })
   if (session.cartMerged) {
     toast.success('Os itens do seu carrinho foram mantidos.', { id: 'cart-merged' })
   }
@@ -31,5 +32,6 @@ export function signOut(queryClient: QueryClient, reason: 'logout' | 'expired'):
   useSessionStore.getState().clear()
   if (reason === 'logout') clearCheckoutDrafts()
   queryClient.removeQueries({ predicate: (query) => isPrivateKey(query.queryKey) })
-  void queryClient.invalidateQueries({ queryKey: ['cart'] })
+  queryClient.removeQueries({ queryKey: ['cart'] })
+  queryClient.removeQueries({ queryKey: ['quote'] })
 }

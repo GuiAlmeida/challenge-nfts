@@ -8,8 +8,9 @@ import { API_PREFIX, applyScenario, fail, guestCartId, json, optionalUser, parse
 
 export type CartOwner = { scope: 'user'; key: string } | { scope: 'guest'; key: string } | null
 
-export function resolveOwner(request: Request): CartOwner {
+export function resolveOwner(request: Request): CartOwner | Response {
   const user = optionalUser(request)
+  if (user instanceof Response) return user
   if (user) return { scope: 'user', key: user.id }
   const guest = guestCartId(request)
   return guest ? { scope: 'guest', key: guest } : null
@@ -52,6 +53,7 @@ export const cartHandlers = [
     const blocked = await applyScenario(request)
     if (blocked) return blocked
     const owner = resolveOwner(request)
+    if (owner instanceof Response) return owner
     if (!owner) return emptyCart()
     const cart = mutate((db) => findOrCreateCart(db, owner))
     return json(toCart(cart, getDb()))
@@ -61,6 +63,7 @@ export const cartHandlers = [
     const blocked = await applyScenario(request)
     if (blocked) return blocked
     const owner = resolveOwner(request)
+    if (owner instanceof Response) return owner
     if (!owner) return fail(400, 'VALIDATION_ERROR', 'Carrinho não identificado.')
     const parsed = await parseBody(request, addCartItemSchema)
     if (!parsed.ok) return parsed.response
@@ -94,6 +97,7 @@ export const cartHandlers = [
     const blocked = await applyScenario(request)
     if (blocked) return blocked
     const owner = resolveOwner(request)
+    if (owner instanceof Response) return owner
     if (!owner) return fail(400, 'VALIDATION_ERROR', 'Carrinho não identificado.')
     const parsed = await parseBody(request, updateCartItemSchema)
     if (!parsed.ok) return parsed.response
@@ -124,6 +128,7 @@ export const cartHandlers = [
     const blocked = await applyScenario(request)
     if (blocked) return blocked
     const owner = resolveOwner(request)
+    if (owner instanceof Response) return owner
     if (!owner) return fail(400, 'VALIDATION_ERROR', 'Carrinho não identificado.')
     const updated = mutate((current) => {
       const target = findOrCreateCart(current, owner)

@@ -1,4 +1,5 @@
-import type { Edition } from '@/contracts/nft'
+import type { NftUpdatedPayload } from '@/contracts/events'
+import type { Edition, NftDetail, NftSummary } from '@/contracts/nft'
 import { CATALOG_SEARCH_DEFAULTS, type CatalogSearch, joinCsv, splitCsv } from '@/contracts/search'
 import { compareEth, formatEth, parseEth } from '@/lib/eth'
 
@@ -28,6 +29,12 @@ export function toggleCsvValue(csv: string | undefined, value: string): string |
   const values = splitCsv(csv)
   const next = values.includes(value) ? values.filter((v) => v !== value) : [...values, value]
   return joinCsv(next)
+}
+
+const facetCollator = new Intl.Collator('pt-BR', { sensitivity: 'base' })
+
+export function sortFacetsByLabel<T extends { label: string }>(facets: readonly T[]): T[] {
+  return [...facets].sort((a, b) => facetCollator.compare(a.label, b.label))
 }
 
 export function countActiveFilters(search: CatalogSearch): number {
@@ -102,3 +109,26 @@ export function isPriceRangeWhole(range: { min: string; max: string }, value: [s
 }
 
 export const DEFAULT_CATALOG_SEARCH: CatalogSearch = withDefaults({})
+
+export function applyNftUpdateToSummary<T extends NftSummary>(nft: T, version: number, payload: NftUpdatedPayload): T {
+  if (nft.version >= version) return nft
+  const next: T = { ...nft, version }
+  if (payload.price && compareEth(payload.price, nft.price) !== 0) {
+    next.previousPrice = nft.price
+    next.price = payload.price
+  }
+  if (payload.editions) next.soldOut = payload.editions.every((edition) => edition.available <= 0)
+  return next
+}
+
+export function applyNftUpdateToDetail(nft: NftDetail, version: number, payload: NftUpdatedPayload): NftDetail {
+  const base = applyNftUpdateToSummary(nft, version, payload)
+  if (base === nft) return nft
+  const editions = payload.editions
+    ? nft.editions.map((edition) => {
+        const patch = payload.editions?.find((e) => e.id === edition.id)
+        return patch ? { ...edition, price: patch.price, available: patch.available } : edition
+      })
+    : nft.editions
+  return { ...base, editions }
+}

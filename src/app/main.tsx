@@ -5,6 +5,7 @@ import '@/styles/globals.css'
 import { configureHttp } from '@/lib/http'
 import { isPrivatePath, signOut, useSessionStore } from '@/features/auth'
 import { ensureCartId, installCartSessionBridge } from '@/features/cart'
+import { installCheckoutSessionBridge } from '@/features/checkout'
 import { App } from './providers'
 import { bootstrapMocks } from './bootstrap-mocks'
 import { queryClient } from './query-client'
@@ -22,6 +23,7 @@ configureHttp({
 })
 
 installCartSessionBridge()
+installCheckoutSessionBridge()
 void bootstrapMocks()
 
 const container = document.getElementById('root')

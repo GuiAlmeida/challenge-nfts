@@ -114,8 +114,8 @@ function Loaded({ nft }: { nft: NftDetail }) {
                   disabled={flow.soldOut}
                 />
                 <div className="flex items-center gap-2">
-                  <Button type="button" size="sm" radius="md" className="w-32.5 text-sm" onClick={flow.buy} disabled={flow.soldOut || flow.buying}>
-                    {flow.buying ? 'ADICIONANDO…' : flow.soldOut ? 'ESGOTADO' : 'COMPRAR'}
+                  <Button type="button" size="sm" radius="md" className="min-w-32.5 text-sm" onClick={flow.buy} disabled={flow.soldOut || flow.buying}>
+                    {flow.buying ? 'ADICIONANDO…' : flow.soldOut ? 'ESGOTADO' : 'ADICIONAR AO CARRINHO'}
                   </Button>
                   <FavoriteButton nftId={nft.id} name={nft.name} variant="outline" />
                 </div>

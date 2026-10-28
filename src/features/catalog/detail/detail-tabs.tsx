@@ -6,13 +6,13 @@ import { RatingStars } from './rating-stars'
 const shortAddress = (address: string) => `${address.slice(0, 6)}...${address.slice(-4).toUpperCase()}`
 
 const trigger =
-  'h-auto flex-none shrink-0 rounded-none border-0 px-0 pb-3 text-[15px] leading-4 text-foreground after:bottom-0 after:h-0.5 after:bg-primary data-[state=active]:text-brand data-[state=active]:font-bold md:text-[17px]'
+  'h-auto flex-none shrink-0 rounded-none border-0 px-0 pb-3 text-[15px] leading-4 text-foreground group-data-[orientation=horizontal]/tabs:after:bottom-0 after:h-0.5 after:bg-primary data-[state=active]:text-brand data-[state=active]:font-bold md:text-[17px]'
 
 export function DetailTabs({ nft }: { nft: NftDetail }) {
   const paragraphs = nft.description.split(/\n\s*\n/).filter(Boolean)
   return (
     <Tabs defaultValue="details" className="gap-0">
-      <TabsList variant="line" className="h-auto w-full min-w-0 justify-start gap-8 overflow-x-auto rounded-none border-b border-border p-0">
+      <TabsList variant="line" className="h-auto w-full min-w-0 justify-start gap-8 overflow-x-auto overflow-y-hidden rounded-none [scrollbar-width:none] border-b border-border p-0">
         <TabsTrigger value="details" className={trigger}>
           Detalhes do NFT
         </TabsTrigger>

@@ -41,7 +41,7 @@ export function useNftDetailFlow(nft: NftDetail): NftDetailFlow {
     buy: () => {
       if (max === 0 || addToCart.isPending) return
       addToCart.mutate(
-        { nftId: nft.id, editionId: edition.id, quantity },
+        { body: { nftId: nft.id, editionId: edition.id, quantity }, name: nft.name },
         {
           onError: (error) => {
             toast.error(error.message)

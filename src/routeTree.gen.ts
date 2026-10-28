@@ -15,7 +15,6 @@ import { Route as CartRouteImport } from './routes/cart'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as AuthenticatedCheckoutRouteImport } from './routes/_authenticated/checkout'
-import { Route as DevSpikeRouteImport } from './routes/dev.spike'
 import { Route as DevUiRouteImport } from './routes/dev.ui'
 import { Route as NftNftIdRouteImport } from './routes/nft.$nftId'
 import { Route as AuthenticatedAccountProfileRouteImport } from './routes/_authenticated/account.profile'
@@ -50,11 +49,6 @@ const AuthenticatedCheckoutRoute = AuthenticatedCheckoutRouteImport.update({
   id: '/checkout',
   path: '/checkout',
   getParentRoute: () => AuthenticatedRoute,
-} as any)
-const DevSpikeRoute = DevSpikeRouteImport.update({
-  id: '/dev/spike',
-  path: '/dev/spike',
-  getParentRoute: () => rootRouteImport,
 } as any)
 const DevUiRoute = DevUiRouteImport.update({
   id: '/dev/ui',
@@ -91,7 +85,6 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/checkout': typeof AuthenticatedCheckoutRoute
-  '/dev/spike': typeof DevSpikeRoute
   '/dev/ui': typeof DevUiRoute
   '/nft/$nftId': typeof NftNftIdRoute
   '/account/profile': typeof AuthenticatedAccountProfileRoute
@@ -104,7 +97,6 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/checkout': typeof AuthenticatedCheckoutRoute
-  '/dev/spike': typeof DevSpikeRoute
   '/dev/ui': typeof DevUiRoute
   '/nft/$nftId': typeof NftNftIdRoute
   '/account/profile': typeof AuthenticatedAccountProfileRoute
@@ -119,7 +111,6 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
   '/_authenticated/checkout': typeof AuthenticatedCheckoutRoute
-  '/dev/spike': typeof DevSpikeRoute
   '/dev/ui': typeof DevUiRoute
   '/nft/$nftId': typeof NftNftIdRoute
   '/_authenticated/account/profile': typeof AuthenticatedAccountProfileRoute
@@ -134,7 +125,6 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/checkout'
-    | '/dev/spike'
     | '/dev/ui'
     | '/nft/$nftId'
     | '/account/profile'
@@ -147,7 +137,6 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/checkout'
-    | '/dev/spike'
     | '/dev/ui'
     | '/nft/$nftId'
     | '/account/profile'
@@ -161,7 +150,6 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/_authenticated/checkout'
-    | '/dev/spike'
     | '/dev/ui'
     | '/nft/$nftId'
     | '/_authenticated/account/profile'
@@ -175,7 +163,6 @@ export interface RootRouteChildren {
   CartRoute: typeof CartRoute
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
-  DevSpikeRoute: typeof DevSpikeRoute
   DevUiRoute: typeof DevUiRoute
   NftNftIdRoute: typeof NftNftIdRoute
 }
@@ -223,13 +210,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/checkout'
       preLoaderRoute: typeof AuthenticatedCheckoutRouteImport
       parentRoute: typeof AuthenticatedRoute
-    }
-    '/dev/spike': {
-      id: '/dev/spike'
-      path: '/dev/spike'
-      fullPath: '/dev/spike'
-      preLoaderRoute: typeof DevSpikeRouteImport
-      parentRoute: typeof rootRouteImport
     }
     '/dev/ui': {
       id: '/dev/ui'
@@ -293,7 +273,6 @@ const rootRouteChildren: RootRouteChildren = {
   CartRoute: CartRoute,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
-  DevSpikeRoute: DevSpikeRoute,
   DevUiRoute: DevUiRoute,
   NftNftIdRoute: NftNftIdRoute,
 }

@@ -1,8 +1,20 @@
 import { type QueryClient } from '@tanstack/react-query'
 import { createRootRouteWithContext, type ErrorComponentProps, HeadContent, Link, Outlet, useRouter, useRouterState } from '@tanstack/react-router'
-import { AppFooter, AppHeader, FetchingBar, hidesFooterOnMobile, hidesTabBar, MobileTabBar, OfflineBanner, PageContainer } from '@/components/layout'
+import {
+  AppFooter,
+  AppHeader,
+  FetchingBar,
+  hidesFooterOnMobile,
+  hidesTabBar,
+  MobileTabBar,
+  mobileToastOffset,
+  OfflineBanner,
+  PageContainer,
+  ReconnectingBanner,
+} from '@/components/layout'
 import { useLogout, useSessionUser } from '@/features/auth'
-import { useCartCount } from '@/features/cart'
+import { MiniCart } from '@/features/cart'
+import { RealtimeProvider, useRealtimeStatus } from '@/features/realtime'
 import { Button } from '@/components/ui/button'
 import { Toaster } from '@/components/ui/sonner'
 
@@ -20,30 +32,33 @@ function RootLayout() {
   const pathname = useRouterState({ select: (s) => s.location.pathname })
   const showTabBar = !hidesTabBar(pathname)
   const user = useSessionUser()
-  const cartCount = useCartCount()
   const logout = useLogout()
   const footerMobileHidden = hidesFooterOnMobile(pathname)
+  const realtime = useRealtimeStatus()
   return (
-    <div className="flex min-h-svh flex-col">
-      <HeadContent />
-      <a
-        href="#conteudo"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-md focus:bg-primary focus:px-3 focus:py-2 focus:text-primary-foreground"
-      >
-        Pular para o conteúdo
-      </a>
-      <FetchingBar />
-      <OfflineBanner />
-      <AppHeader user={user} cartCount={cartCount} onLogout={() => void logout()} />
-      <main id="conteudo" className={showTabBar ? 'flex-1 pb-24 md:pb-0' : 'flex-1'}>
-        <Outlet />
-      </main>
-      <div className={footerMobileHidden ? 'hidden md:block' : undefined}>
-        <AppFooter />
+    <RealtimeProvider>
+      <div className="flex min-h-svh flex-col">
+        <HeadContent />
+        <a
+          href="#conteudo"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-md focus:bg-primary focus:px-3 focus:py-2 focus:text-primary-foreground"
+        >
+          Pular para o conteúdo
+        </a>
+        <FetchingBar />
+        <OfflineBanner />
+        <ReconnectingBanner reconnecting={realtime === 'reconnecting'} />
+        <AppHeader user={user} cart={<MiniCart />} onLogout={() => void logout()} />
+        <main id="conteudo" className={showTabBar ? 'flex-1 pb-24 md:pb-0' : 'flex-1'}>
+          <Outlet />
+        </main>
+        <div className={footerMobileHidden ? 'hidden md:block' : undefined}>
+          <AppFooter />
+        </div>
+        {showTabBar ? <MobileTabBar /> : null}
+        <Toaster mobileOffset={{ bottom: mobileToastOffset(pathname) }} />
       </div>
-      {showTabBar ? <MobileTabBar /> : null}
-      <Toaster />
-    </div>
+    </RealtimeProvider>
   )
 }
 

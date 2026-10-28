@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import {
+  sortFacetsByLabel,
   clampQuantity,
   defaultEditionId,
   ethToStep,
@@ -104,5 +105,19 @@ describe('slider de preço em passos de 0,01 ETH', () => {
   it('formata o rótulo como o Figma', () => {
     expect(formatPriceLabel('12.3')).toBe('12,30')
     expect(formatPriceLabel('0.025')).toBe('0,02')
+  })
+})
+
+describe('sortFacetsByLabel', () => {
+  it('ordena por rótulo em pt-BR ignorando acentos e caixa', () => {
+    const facets = [
+      { value: 'utilidade', label: 'Utilidade', count: 4 },
+      { value: 'arte-3d', label: 'Arte 3D', count: 4 },
+      { value: 'musica', label: 'Música', count: 5 },
+      { value: 'arte-digital', label: 'Arte digital', count: 5 },
+      { value: 'colecionaveis', label: 'Colecionáveis', count: 4 },
+    ]
+    expect(sortFacetsByLabel(facets).map((f) => f.label)).toEqual(['Arte 3D', 'Arte digital', 'Colecionáveis', 'Música', 'Utilidade'])
+    expect(facets[0]?.label).toBe('Utilidade')
   })
 })

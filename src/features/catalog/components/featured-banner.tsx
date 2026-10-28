@@ -15,9 +15,9 @@ export function FeaturedBanner() {
     >
       <span aria-hidden="true" className="absolute top-26.25 left-9.5 size-3.75 rounded-full bg-primary/20" />
       <span aria-hidden="true" className="absolute top-85.75 left-62 size-11.25 rounded-full bg-primary/15" />
-      <div className="flex flex-col gap-4 px-5">
+      <div className="flex flex-col gap-1 px-5">
         <p className="text-2xl leading-8 font-bold text-brand">NFT EM DESTAQUE</p>
-        <p className="text-center text-[22px] leading-4 font-bold text-foreground">OFERTA LIMITADA</p>
+        <p className="text-[22px] leading-7 font-bold text-foreground">OFERTA LIMITADA</p>
       </div>
       <NftImage image={FEATURED.image} width={310} height={368} sizes="310px" className="h-92 w-full rounded-[22px]" />
     </Link>

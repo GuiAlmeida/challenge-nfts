@@ -8,6 +8,7 @@ export function Icon({ icon: Svg, size = 20, label, className }: { icon: IconCom
     <Svg
       width={size}
       height={size}
+      style={{ width: size, height: size }}
       aria-hidden={label ? 'false' : 'true'}
       role={label ? 'img' : undefined}
       aria-label={label}

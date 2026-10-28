@@ -1,7 +1,7 @@
 import { Link, useNavigate, useRouterState } from '@tanstack/react-router'
 import { cn } from 'cn'
 import { useId, useState } from 'react'
-import { CartIcon, LoginIcon, SearchIcon } from '@/assets/icons'
+import { LoginIcon, SearchIcon } from '@/assets/icons'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
@@ -11,7 +11,7 @@ import { activeNavFor, headerHasDivider } from './nav'
 import { notifyOutOfScope } from './out-of-scope'
 import { PageContainer } from './page-container'
 
-export function AppHeader({ user, cartCount, onLogout }: { user: PublicUser | null; cartCount: number; onLogout?: () => void }) {
+export function AppHeader({ user, cart, onLogout }: { user: PublicUser | null; cart: React.ReactNode; onLogout?: () => void }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname })
   const active = activeNavFor(pathname)
   const navigate = useNavigate()
@@ -79,21 +79,7 @@ export function AppHeader({ user, cartCount, onLogout }: { user: PublicUser | nu
             </button>
           </form>
 
-          <Link
-            to="/cart"
-            aria-label={cartCount > 0 ? `Carrinho, ${cartCount} itens` : 'Carrinho'}
-            className="relative rounded-sm text-foreground outline-none hover:text-brand focus-visible:ring-2 focus-visible:ring-ring"
-          >
-            <Icon icon={CartIcon} size={24} />
-            {cartCount > 0 ? (
-              <span
-                aria-hidden="true"
-                className="absolute -top-1 left-3.75 flex size-4 items-center justify-center rounded-full bg-primary font-mono text-[10px] leading-none font-medium text-primary-foreground"
-              >
-                {cartCount > 99 ? '99+' : cartCount}
-              </span>
-            ) : null}
-          </Link>
+          {cart}
 
           {user ? (
             <DropdownMenu>

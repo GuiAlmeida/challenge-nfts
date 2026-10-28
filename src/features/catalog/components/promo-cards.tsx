@@ -30,17 +30,17 @@ const PROMOS: Promo[] = [
 
 export function PromoCards() {
   return (
-    <section aria-label="Promoções" className="grid gap-6 md:grid-cols-2 md:gap-7">
+    <section aria-label="Promoções" className="grid gap-6 lg:grid-cols-2 lg:gap-7">
       {PROMOS.map((promo) => (
-        <article key={promo.title[0]} className="relative flex h-62.5 items-center justify-end overflow-hidden rounded-lg bg-card">
+        <article key={promo.title[0]} className="flex min-h-62.5 items-stretch gap-4 overflow-hidden rounded-lg bg-card">
           <NftImage
             image={promo.image}
             width={292}
             height={250}
-            sizes="(min-width: 768px) 292px, 45vw"
-            className="absolute top-0 left-[-5px] h-62.5 w-[45%] rounded-[18px] md:w-73"
+            sizes="(min-width: 1024px) 240px, 40vw"
+            className="h-auto w-2/5 shrink-0 rounded-[18px]"
           />
-          <div className="relative flex w-[55%] flex-col items-end gap-2 pr-6 text-right md:w-auto md:pr-7.5">
+          <div className="flex min-w-0 flex-1 flex-col items-end justify-center gap-2 py-6 pr-6 text-right md:pr-7.5">
             <h2 className="text-base leading-6 font-bold text-foreground md:text-lg">
               {promo.title[0]}
               <br />
