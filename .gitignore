@@ -17,6 +17,7 @@ coverage
 # testes e auditorias geradas
 test-results
 playwright-report
+playwright-report-visual
 blob-report
 playwright/.cache
 lighthouse/reports/*

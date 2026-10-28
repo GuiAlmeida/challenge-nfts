@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test'
 import { addToCart, openWithMocks } from './helpers'
+import { mock } from './mock'
 
 test.describe('tempo real: preço e disponibilidade no carrinho (README 9 e 10)', () => {
   test('cenário price-change avisa, marca o resumo como desatualizado e atualiza sob demanda', async ({ page, isMobile }) => {
@@ -25,16 +26,7 @@ test.describe('tempo real: preço e disponibilidade no carrinho (README 9 e 10)'
     await expect(page.getByText('1.206 ETH').filter({ visible: true })).toBeVisible()
 
     const emit = (id: string, version: number, price: string) =>
-      page.evaluate(
-        ({ id, version, price }) =>
-          window.__kurioMock?.emit(
-            'nft.updated',
-            'emerald-ape-042',
-            { price, editions: [{ id: 'emerald-ape-042:1of10', price, available: 7 }] },
-            { id, version },
-          ),
-        { id, version, price },
-      )
+      mock.emit(page, 'nft.updated', 'emerald-ape-042', { price, editions: [{ id: 'emerald-ape-042:1of10', price, available: 7 }] }, { id, version })
 
     await emit('evt-dup', 50, '2.00')
     await expect(page.getByText('Preço de Emerald Ape #042 mudou de 1.19 para 2.00 ETH.').filter({ visible: true })).toBeVisible()
@@ -53,15 +45,13 @@ test.describe('tempo real: preço e disponibilidade no carrinho (README 9 e 10)'
     await page.goto('/cart')
     await expect(page.getByText('1.206 ETH').filter({ visible: true })).toBeVisible()
     await page.waitForTimeout(35_000)
-    const sessions = await page.evaluate(() => window.__kurioMock?.socket.sessions().length ?? 0)
-    expect(sessions).toBe(1)
-    await page.evaluate(() =>
-      window.__kurioMock?.emit(
-        'nft.updated',
-        'emerald-ape-042',
-        { price: '1.50', editions: [{ id: 'emerald-ape-042:1of10', price: '1.50', available: 7 }] },
-        { id: 'evt-late', version: 60 },
-      ),
+    expect(await mock.socketSessions(page)).toBe(1)
+    await mock.emit(
+      page,
+      'nft.updated',
+      'emerald-ape-042',
+      { price: '1.50', editions: [{ id: 'emerald-ape-042:1of10', price: '1.50', available: 7 }] },
+      { id: 'evt-late', version: 60 },
     )
     await expect(page.getByText('Preço de Emerald Ape #042 mudou de 1.19 para 1.50 ETH.').filter({ visible: true })).toBeVisible()
   })

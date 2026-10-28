@@ -1,5 +1,6 @@
 import { expect, type Page, test } from '@playwright/test'
 import { addToCart, connectWallet, fillLogin, openWithMocks, placeOrder } from './helpers'
+import { mock } from './mock'
 
 async function guestCartThenLogin(page: Page, isMobile: boolean, scenario: string) {
   await openWithMocks(page, `/?mock-scenario=${scenario}`)
@@ -29,7 +30,7 @@ test.describe('falhas no checkout (README 7)', () => {
     await alert.getByRole('button', { name: 'Tentar novamente' }).click()
     await page.waitForURL(/\/orders\/ord_/, { timeout: 20_000 })
     await expect(page.getByTestId('receipt')).toBeVisible({ timeout: 15_000 })
-    expect(await page.evaluate(() => window.__kurioMock?.state().orders)).toBe(1)
+    expect(await mock.orderCount(page)).toBe(1)
   })
 
   test('carteira recusada bloqueia a confirmação até reconectar', async ({ page, isMobile }) => {
@@ -58,5 +59,23 @@ test.describe('falhas no checkout (README 7)', () => {
     await page.waitForURL(/\/orders\/ord_/)
     await expect(page.getByTestId('receipt')).toBeVisible({ timeout: 10_000 })
     await expect(page.getByTestId('receipt')).toContainText('1.325 ETH')
+  })
+
+  test('edição esgotada pelo socket durante o checkout bloqueia a confirmação (README 9)', async ({ page, isMobile }) => {
+    test.slow()
+    await guestCartThenLogin(page, isMobile, 'sold-out')
+    await page.goto('/checkout')
+    await connectWallet(page)
+    await expect(page.getByText('Emerald Ape #042 esgotou.').filter({ visible: true })).toBeVisible({ timeout: 15_000 })
+
+    await page.getByRole('button', { name: 'Confirmar compra' }).click()
+    const alert = page.getByRole('alert').filter({ hasText: '"Emerald Ape #042" esgotou.' })
+    await expect(alert).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Confirmar compra' })).toHaveAttribute('aria-disabled', 'true')
+    expect(await mock.orderCount(page)).toBe(0)
+
+    await alert.getByRole('link', { name: 'Revisar carrinho' }).click()
+    await expect(page).toHaveURL('/cart')
+    await expect(page.getByText('Esgotado').filter({ visible: true }).first()).toBeVisible()
   })
 })

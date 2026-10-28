@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test'
 import { fillLogin, openWithMocks, signIn } from './helpers'
+import { mock } from './mock'
 
 test.describe('autenticação e sessão (README 3)', () => {
   test('rota privada leva ao login, volta após entrar e sobrevive ao refresh', async ({ page, isMobile }) => {
@@ -54,6 +55,29 @@ test.describe('autenticação e sessão (README 3)', () => {
     await expect(page).toHaveURL(/\/login\?redirect=/)
   })
 
+  test('troca de usuário não mostra dados do anterior', async ({ page }) => {
+    const displayName = page.getByRole('form', { name: 'Perfil do colecionador' }).getByRole('textbox', { name: 'Nome de exibição' })
+    await openWithMocks(page, '/?mock-reset=1')
+    await signIn(page)
+    await page.goto('/nft/emerald-ape-042')
+    await expect(page.getByRole('button', { name: 'Remover Emerald Ape #042 dos favoritos' }).first()).toHaveAttribute('aria-pressed', 'true')
+    await page.goto('/account/wallets')
+    await expect(page.getByRole('form', { name: 'Carteira secundária' })).toBeVisible()
+    await page.goto('/account/profile')
+    await expect(displayName).toHaveValue('Ana Lima')
+
+    await page.getByRole('button', { name: 'Sair' }).filter({ visible: true }).click()
+    await expect(page).toHaveURL('/')
+    await signIn(page, 'bruno@kurio.test')
+    await page.goto('/account/profile')
+    await expect(displayName).toHaveValue('Bruno Reis')
+    await page.goto('/account/wallets')
+    await expect(page.getByText('Você ainda não adicionou uma carteira secundária.')).toBeVisible()
+    await expect(page.getByRole('form', { name: 'Carteira principal' }).getByRole('textbox', { name: 'Endereço da carteira' })).toHaveValue('')
+    await page.goto('/nft/emerald-ape-042')
+    await expect(page.getByRole('button', { name: 'Favoritar Emerald Ape #042' }).first()).toHaveAttribute('aria-pressed', 'false')
+  })
+
   test('sessão expirada avisa e derruba (cenário session-expired)', async ({ page }) => {
     await openWithMocks(page, '/?mock-scenario=session-expired')
     await signIn(page)
@@ -68,8 +92,8 @@ test.describe('autenticação e sessão (README 3)', () => {
 
   test('sessão expirada no checkout volta com o rascunho preservado', async ({ page }) => {
     await openWithMocks(page, '/?mock-scenario=session-expired')
-    await page.evaluate(() => window.__kurioMock?.setScenario('cart-seeded', { reset: true }))
-    await page.evaluate(() => window.__kurioMock?.setScenario('session-expired', { reset: false }))
+    await mock.setScenario(page, 'cart-seeded', { reset: true })
+    await mock.setScenario(page, 'session-expired', { reset: false })
     await signIn(page)
     await page.goto('/checkout')
     const note = page.getByRole('textbox', { name: 'Observação do colecionador (opcional)' })

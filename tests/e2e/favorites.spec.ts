@@ -1,5 +1,6 @@
 import { expect, type Page, test } from '@playwright/test'
 import { fillLogin, openWithMocks, signIn } from './helpers'
+import { mock } from './mock'
 
 const favoriteEmerald = (page: Page) => page.getByRole('button', { name: 'Favoritar Emerald Ape #042' }).first()
 const favoriteSage = (page: Page) => page.getByRole('button', { name: 'Favoritar Sage Nomad #009' }).first()
@@ -38,7 +39,7 @@ test.describe('favoritos (README 4)', () => {
   test('erro do servidor desfaz o favorito e avisa', async ({ page }) => {
     await openWithMocks(page, '/?mock-reset=1')
     await signIn(page)
-    await page.evaluate("window.__kurioMock.setScenario('http-errors', { reset: false })")
+    await mock.setScenario(page, 'http-errors', { reset: false })
     await favoriteSage(page).click()
     await expect(page.getByText(/Não foi possível atualizar Sage Nomad #009/)).toBeVisible()
     await expect(favoriteSage(page)).toHaveAttribute('aria-pressed', 'false')

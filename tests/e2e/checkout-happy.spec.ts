@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test'
 import { connectWallet, fillLogin, openWithMocks, placeOrder } from './helpers'
+import { mock } from './mock'
 
 test.describe('checkout e pedido confirmado (README 6)', () => {
   test('confirma a compra, acompanha o pedido e mostra o recibo após a confirmação', async ({ page, isMobile }) => {
@@ -21,7 +22,7 @@ test.describe('checkout e pedido confirmado (README 6)', () => {
     await expect(page.getByTestId('receipt')).toBeVisible({ timeout: 10_000 })
     await expect(page.getByTestId('receipt')).toContainText('Seus NFTs agora estão na sua carteira')
     await expect(page.getByTestId('receipt')).toContainText('26.846 ETH')
-    expect(await page.evaluate(() => window.__kurioMock?.state().orders)).toBe(1)
+    expect(await mock.orderCount(page)).toBe(1)
 
     await page.reload()
     await expect(page.getByTestId('receipt')).toBeVisible()
@@ -48,7 +49,7 @@ test.describe('checkout e pedido confirmado (README 6)', () => {
     await confirm.dblclick()
     await page.waitForURL(/\/orders\/ord_/)
     await expect(page.getByTestId('receipt')).toBeVisible({ timeout: 10_000 })
-    expect(await page.evaluate(() => window.__kurioMock?.state().orders)).toBe(1)
+    expect(await mock.orderCount(page)).toBe(1)
   })
 
   test('rascunho do checkout sobrevive à troca de página', async ({ page }) => {

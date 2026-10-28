@@ -152,8 +152,12 @@ test.describe('perfil e carteiras (README 8)', () => {
     await primary.getByRole('button', { name: 'Salvar carteira' }).click()
     await expect(toast(page, 'Carteira principal salva.')).toBeVisible()
 
-    await page.getByRole('checkbox', { name: 'Igual à carteira principal' }).click()
-    await page.getByRole('button', { name: 'Adicionar' }).click()
+    const sameAsPrimary = page.getByRole('checkbox', { name: 'Igual à carteira principal' })
+    await sameAsPrimary.focus()
+    await page.keyboard.press('Space')
+    await expect(sameAsPrimary).toBeChecked()
+    await page.getByRole('button', { name: 'Adicionar' }).focus()
+    await page.keyboard.press('Enter')
     const secondary = page.getByRole('form', { name: 'Carteira secundária' })
     await expect(secondary.getByRole('textbox', { name: 'Endereço da carteira' })).toHaveValue('0x2222222222222222222222222222222222222222')
     await secondary.getByRole('textbox', { name: 'Apelido da carteira' }).fill('Reserva')
@@ -161,7 +165,9 @@ test.describe('perfil e carteiras (README 8)', () => {
     await expect(toast(page, 'Carteira secundária salva.')).toBeVisible()
 
     await page.reload()
-    await expect(page.getByRole('form', { name: 'Carteira principal' }).getByRole('textbox', { name: 'Apelido da carteira' })).toHaveValue('Principal')
+    await expect(page.getByRole('form', { name: 'Carteira principal' }).getByRole('textbox', { name: 'Apelido da carteira' })).toHaveValue(
+      'Principal',
+    )
     await expect(page.getByRole('form', { name: 'Carteira secundária' }).getByRole('textbox', { name: 'Apelido da carteira' })).toHaveValue('Reserva')
   })
 })
