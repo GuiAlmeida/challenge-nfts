@@ -2,7 +2,6 @@ import { z } from 'zod'
 import { emailSchema, passwordSchema, usernameSchema } from '@/contracts/auth'
 import { ensNameSchema } from '@/contracts/common'
 
-/** Zod 4 skips object refinements once any field fails; `when` keeps the password checks running alongside field errors. */
 export const profileFormSchema = z
   .object({
     displayName: z.string().trim().min(2, 'Mínimo de 2 caracteres').max(60, 'Máximo de 60 caracteres'),
