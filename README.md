@@ -10,7 +10,7 @@ React 19, TypeScript 5.9, Vite 8, TanStack Router (rotas por arquivo) e TanStack
 
 ## Requisitos
 
-- Node 24.11.1 (`.nvmrc`; o mínimo aceito é 22.12)
+- Node 24 (`.nvmrc` fixa a 24.11.1)
 - pnpm 11 (versão fixada em `packageManager`)
 
 ## Setup

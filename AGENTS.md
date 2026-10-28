@@ -7,7 +7,7 @@ Fonte canônica de regras deste repositório. `CLAUDE.md` apenas importa este ar
 - Desafio Frontend "Marketplace de NFTs". `README.md` (raiz) é a fonte de verdade de comportamento e avaliação; leia-o antes de qualquer fase.
 - Plano aprovado: `docs/planning/PLANEJAMENTO.md` (arquitetura em C, fases em D, testes em E, decisões em F). Estado vivo: `docs/plan/STATUS.md`. Checklists por fase: `docs/plan/phase-N.md`.
 - Prazo de entrega: **29/10/2026 09:00 BRT**. Cronograma em `PLANEJAMENTO.md` D.0.
-- Stack fixa: React 19 + TypeScript 5.9, Vite 8, TanStack Router (file-based via `@tanstack/router-plugin`), TanStack Query 5, Axios, `socket.io-client` 4, Tailwind 4, shadcn/ui, MSW **2.15.x** + `@mswjs/socket.io-binding`, Playwright, Lighthouse, zod 4, react-hook-form, zustand, pnpm, Node ≥ 22.12.
+- Stack fixa: React 19 + TypeScript 5.9, Vite 8, TanStack Router (file-based via `@tanstack/router-plugin`), TanStack Query 5, Axios, `socket.io-client` 4, Tailwind 4, shadcn/ui, MSW **2.15.x** + `@mswjs/socket.io-binding`, Playwright, Lighthouse, zod 4, react-hook-form, zustand, pnpm, Node 24.
 - Idioma da interface: pt-BR único, textos do Figma. Sem i18n.
 - Figma de referência (acessível via MCP): arquivo `LupYhmHhcC6Gbren3WzDqK`, página `0:1`. Node ids por tela em `PLANEJAMENTO.md` A.2; tokens em A.3.
 
