@@ -24,7 +24,6 @@ configureHttp({
 
 installCartSessionBridge()
 installCheckoutSessionBridge()
-void bootstrapMocks()
 
 const container = document.getElementById('root')
 if (!container) throw new Error('#root não encontrado')
@@ -34,3 +33,6 @@ createRoot(container).render(
     <App />
   </StrictMode>,
 )
+
+/** O backend simulado sobe depois da primeira pintura para o bundle dele não disputar a rede com a interface; as requisições já esperam `networkReady`. */
+requestAnimationFrame(() => setTimeout(() => void bootstrapMocks(), 0))
