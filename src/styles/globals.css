@@ -26,7 +26,7 @@
       button,
       summary,
       select,
-      label:has(> input:not(:disabled)),
+      label:has(:is(input[type='checkbox'], input[type='radio'], [role='checkbox'], [role='radio']):not(:disabled)),
       input[type='checkbox'],
       input[type='radio'],
       input[type='range'],
@@ -42,7 +42,7 @@
     ) {
     cursor: pointer;
   }
-  :where(:disabled, [aria-disabled='true'], [data-disabled]) {
+  :where(:disabled, [aria-disabled='true'], [data-disabled]:not([data-disabled='false']), label:has(:is([role='checkbox'], [role='radio'], input):disabled)) {
     cursor: not-allowed;
   }
   :where(a[href], button, summary, select, input, textarea, [role='button'], [role='tab'], [role='checkbox'], [role='radio'], [role='option'], [role='menuitem']) {
